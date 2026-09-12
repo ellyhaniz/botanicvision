@@ -17,4 +17,35 @@
     <color name="plantdex_rare_text">#6B4EA0</color>
     <color name="plantdex_progress_track">#E5E7EB</color>
     <color name="plantdex_divider">#ECECEC</color>
+
+    <!-- Added for management / record / auth screens -->
+    <color name="plantdex_panel_bg">#F2F4F2</color>
+    <color name="plantdex_input_border">#D0D5D2</color>
+    <color name="plantdex_input_bg">#FFFFFF</color>
+    <color name="plantdex_label">#333333</color>
+
+    <color name="plantdex_chip_bg">#8FBC9B</color>
+    <color name="plantdex_chip_text">#1B3A2A</color>
+
+    <color name="plantdex_error_btn">#A6423A</color>
+    <color name="plantdex_error_btn_text">#FFFFFF</color>
+    <color name="plantdex_error_bg">#FBEAEA</color>
+    <color name="plantdex_error_text">#C0392B</color>
+
+    <color name="plantdex_cancel_bg">#DDEFE4</color>
+    <color name="plantdex_cancel_text">#1B5E3F</color>
+
+    <color name="plantdex_warn_bg">#FCEED9</color>
+    <color name="plantdex_warn_icon">#C98A2E</color>
+
+    <color name="plantdex_success_bg">#DDEFE4</color>
+    <color name="plantdex_success_text">#2F7D50</color>
+
+    <color name="plantdex_common_bg">#E9E9E9</color>
+    <color name="plantdex_common_text">#555555</color>
+
+    <color name="plantdex_note_bg">#E8F0EC</color>
+    <color name="plantdex_note_text">#3F4A45</color>
+
+    <color name="plantdex_photo_placeholder">#3E7A5E</color>
 </resources>

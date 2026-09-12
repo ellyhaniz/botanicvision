@@ -399,64 +399,9 @@
     </ScrollView>
 
     <!-- Fixed bottom navigation -->
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/navContainer"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="@drawable/bg_bottom_bar"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
-
-        <ImageButton
-            android:id="@+id/navHome"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_home"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/app_name_display" />
-
-        <ImageButton
-            android:id="@+id/navProfile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_person"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/visitor_id" />
-
-        <ImageButton
-            android:id="@+id/navCamera"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_camera"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/identify_discovery" />
-
-        <ImageButton
-            android:id="@+id/navNotifications"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_notifications"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/recent_discoveries" />
-
-        <ImageButton
-            android:id="@+id/navLogout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_logout"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/view_more" />
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

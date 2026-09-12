@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:padding="14dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/raTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Updated Botanical Record" android:textColor="@color/plantdex_text_primary" android:textSize="14sp" android:textStyle="bold" />
+        <TextView android:id="@+id/raRef" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/bg_chip" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="4dp" android:paddingBottom="4dp"
+            android:text="#101578" android:textColor="@color/plantdex_chip_text" android:textSize="11sp" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/raTimestamp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp"
+        android:text="07 Dec 2026, 18:14:05" android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="10dp" android:background="@color/plantdex_divider" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="User" android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+        <TextView android:id="@+id/raUser" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="rlim_204" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="12sp" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:orientation="horizontal">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Affected Record" android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+        <TextView android:id="@+id/raAffected" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="BOTANICAL_RECORD #0114" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/raActionBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_panel"
+        android:padding="12dp"
+        android:visibility="gone">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Action  " android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+        <TextView android:id="@+id/raAction" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Updated Botanical Record" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

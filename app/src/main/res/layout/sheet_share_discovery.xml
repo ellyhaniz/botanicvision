@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_panel"
+    android:padding="22dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/plantdex_input_border" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Share your discovery"
+        android:textColor="@color/plantdex_text_primary"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="PlantDex creates a post with the item image, name and key details."
+        android:textColor="@color/plantdex_text_muted"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tvSharePreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_pill"
+        android:padding="14dp"
+        android:text="&quot;I just unlocked the Tembusu Tree (Rare) in PlantDex at the Singapore Botanic Gardens! 18/60 discovered.&quot;"
+        android:textColor="@color/plantdex_success_text"
+        android:textStyle="bold"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <TextView android:id="@+id/shareInstagram" style="@style/ShareIconTile" android:text="Instagram" />
+        <TextView android:id="@+id/shareWhatsapp" style="@style/ShareIconTile" android:text="WhatsApp" />
+        <TextView android:id="@+id/shareFacebook" style="@style/ShareIconTile" android:text="Facebook" />
+        <TextView android:id="@+id/shareMore" style="@style/ShareIconTile" android:text="More" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutShareError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_error_banner"
+        android:padding="12dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠ Alt flow 3: Post could not be published. Try again."
+            android:textColor="@color/plantdex_error_text"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCancelShare"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_cancel_pill"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/plantdex_cancel_text"
+        android:textStyle="bold"
+        android:stateListAnimator="@null" />
+</LinearLayout>

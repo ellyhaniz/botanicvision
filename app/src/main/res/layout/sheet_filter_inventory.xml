@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_panel"
+    android:padding="22dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/plantdex_input_border" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Filter collected items"
+        android:textColor="@color/plantdex_text_primary"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Only collected items matching your selection are shown."
+        android:textColor="@color/plantdex_text_muted"
+        android:textSize="12sp" />
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="18dp"
+        android:text="Type" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="14sp" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+        <TextView android:id="@+id/filterTypePlant" style="@style/FilterChip.Selected" android:text="Plant" />
+        <TextView android:id="@+id/filterTypeFlower" style="@style/FilterChip" android:text="Flower" />
+        <TextView android:id="@+id/filterTypeArchitecture" style="@style/FilterChip" android:text="Architecture" />
+    </LinearLayout>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="18dp"
+        android:text="Rarity level" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="14sp" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+        <TextView android:id="@+id/filterRarityCommon" style="@style/FilterChip" android:text="Common" />
+        <TextView android:id="@+id/filterRarityRare" style="@style/FilterChip.Selected" android:text="Rare" />
+        <TextView android:id="@+id/filterRarityLegendary" style="@style/FilterChip" android:text="Legendary" />
+    </LinearLayout>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="18dp"
+        android:text="Discovery status" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="14sp" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+        <TextView android:id="@+id/filterStatusCollected" style="@style/FilterChip.Selected" android:text="Collected" />
+        <TextView android:id="@+id/filterStatusUndiscovered" style="@style/FilterChip" android:text="Undiscovered" />
+        <TextView android:id="@+id/filterStatusAll" style="@style/FilterChip" android:text="All" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnClearFilter"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_cancel_pill"
+            android:text="Clear filter"
+            android:textAllCaps="false"
+            android:textColor="@color/plantdex_cancel_text"
+            android:textStyle="bold"
+            android:stateListAnimator="@null" />
+
+        <Button
+            android:id="@+id/btnApplyFilter"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_primary"
+            android:text="Apply"
+            android:textAllCaps="false"
+            android:textColor="@color/plantdex_button_text"
+            android:textStyle="bold"
+            android:stateListAnimator="@null" />
+    </LinearLayout>
+</LinearLayout>

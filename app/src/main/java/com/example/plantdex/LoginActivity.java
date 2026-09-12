@@ -3,7 +3,6 @@ package com.example.plantdex;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,26 +39,9 @@ public class LoginActivity extends AppCompatActivity {
 
         setUpAccountTypeSpinner();
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attemptLogin();
-            }
-        });
-
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
-        });
-
-        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
-            }
-        });
+        btnSignIn.setOnClickListener(v -> attemptLogin());
+        btnRegister.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+        tvForgotPassword.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class)));
     }
 
     private void setUpAccountTypeSpinner() {
@@ -89,8 +71,12 @@ public class LoginActivity extends AppCompatActivity {
 
         // Prototype check only. Replace with POST /api/auth/login.
         if (DEMO_USERNAME.equals(username) && DEMO_PASSWORD.equals(password)) {
+            Object selected = spinnerAccountType.getSelectedItem();
+            String accountType = selected != null ? selected.toString().toUpperCase() : "VISITOR";
+
             Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, VisitorDashboardActivity.class);
+            Intent intent = new Intent(this, RoleSplashActivity.class);
+            intent.putExtra(RoleSplashActivity.EXTRA_ROLE, accountType);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();

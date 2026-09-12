@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:padding="14dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <FrameLayout android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_icon_tile">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_building" android:contentDescription="Architecture" />
+        </FrameLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+            <TextView android:id="@+id/archName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bandstand" android:textColor="@color/plantdex_text_primary" android:textSize="15sp" android:textStyle="bold" />
+            <TextView android:id="@+id/archSubtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Record #0198" android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton android:id="@+id/btnEditArch" android:layout_width="30dp" android:layout_height="30dp" android:background="?attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_edit" android:scaleType="centerInside" android:contentDescription="Edit" />
+        <ImageButton android:id="@+id/btnDeleteArch" android:layout_width="30dp" android:layout_height="30dp" android:layout_marginStart="4dp" android:background="?attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_delete" android:scaleType="centerInside" android:contentDescription="Delete" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="10dp" android:background="@color/plantdex_divider" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Location" android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+        <TextView android:id="@+id/archLocation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bandstand Hill" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="12sp" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:orientation="horizontal">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Style" android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+        <TextView android:id="@+id/archStyle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Victorian" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="12sp" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Constructed" android:textColor="@color/plantdex_text_muted" android:textSize="12sp" />
+        <TextView android:id="@+id/archConstructed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1930" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="12sp" android:layout_marginEnd="6dp" />
+        <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_chevron_right" android:contentDescription="Open" />
+    </LinearLayout>
+</LinearLayout>

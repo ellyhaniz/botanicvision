@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/plantdex_bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="36dp"
+        android:paddingEnd="36dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="40dp">
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/logo_plantdex"
+            android:contentDescription="@string/app_title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Register Account"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Plantdex Account Creation"
+            android:textColor="@color/plantdex_hint"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/bg_input_underline"
+            android:drawableStart="@drawable/ic_email"
+            android:drawableTint="@color/white"
+            android:drawablePadding="12dp"
+            android:hint="Enter E-mail"
+            android:textColorHint="@color/plantdex_hint"
+            android:textColor="@color/white"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
+
+        <EditText
+            android:id="@+id/etFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_input_underline"
+            android:drawableStart="@drawable/ic_person"
+            android:drawableTint="@color/white"
+            android:drawablePadding="12dp"
+            android:hint="Enter Full Name"
+            android:textColorHint="@color/plantdex_hint"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
+
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_input_underline"
+            android:drawableStart="@drawable/ic_person"
+            android:drawableTint="@color/white"
+            android:drawablePadding="12dp"
+            android:hint="Enter Username"
+            android:textColorHint="@color/plantdex_hint"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_input_underline"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawableTint="@color/white"
+            android:drawablePadding="12dp"
+            android:hint="Set Password"
+            android:textColorHint="@color/plantdex_hint"
+            android:textColor="@color/white"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
+
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_input_underline"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawableTint="@color/white"
+            android:drawablePadding="12dp"
+            android:hint="Confirm Password"
+            android:textColorHint="@color/plantdex_hint"
+            android:textColor="@color/white"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
+
+        <EditText
+            android:id="@+id/etDob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_input_underline"
+            android:drawableStart="@drawable/ic_calendar"
+            android:drawableTint="@color/white"
+            android:drawablePadding="12dp"
+            android:hint="Enter DOB (DD/MM/YYYY)"
+            android:textColorHint="@color/plantdex_hint"
+            android:textColor="@color/white"
+            android:inputType="date"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
+
+        <Button
+            android:id="@+id/btnCreateAccount"
+            android:layout_width="220dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/btn_primary"
+            android:text="CREATE ACCOUNT"
+            android:textColor="@color/plantdex_button_text"
+            android:stateListAnimator="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Back to login?"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnBackToSignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginTop="8dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:background="@drawable/btn_secondary"
+            android:text="SIGN IN"
+            android:textColor="@color/plantdex_secondary_text"
+            android:textSize="13sp"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+</ScrollView>
