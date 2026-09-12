@@ -1,4 +1,4 @@
-package com.example.plantdex;
+package com.example.plantdex.common;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.plantdex.R;
+import com.example.plantdex.visitor.VisitorDashboardActivity;
 
 /**
  * Inflates and wires the bottom navigation bar for the Visitor screens.

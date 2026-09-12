@@ -1,4 +1,6 @@
-package com.example.plantdex;
+package com.example.plantdex.common;
+
+import com.example.plantdex.visitor.VisitorDashboardActivity;
 
 /** Shared role constants. Visitor is the only role currently in scope. */
 public final class Roles {

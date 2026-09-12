@@ -15,7 +15,7 @@
         android:theme="@style/Theme.PlantDex">
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".common.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
@@ -25,12 +25,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RegisterActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ResetPasswordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".RoleSplashActivity" android:screenOrientation="portrait" />
+        <activity android:name=".common.RegisterActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".common.ResetPasswordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".common.RoleSplashActivity" android:screenOrientation="portrait" />
 
         <!-- Visitor -->
-        <activity android:name=".VisitorDashboardActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.VisitorDashboardActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

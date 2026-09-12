@@ -1,4 +1,4 @@
-package com.example.plantdex;
+package com.example.plantdex.common;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.os.Looper;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.plantdex.R;
 
 /**
  * Brief branded splash shown right after a successful login, naming the

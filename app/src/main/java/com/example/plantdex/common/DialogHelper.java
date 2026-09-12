@@ -1,4 +1,4 @@
-package com.example.plantdex;
+package com.example.plantdex.common;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.plantdex.R;
 
 /**
  * Small shared helpers for the confirmation dialogs used across every actor

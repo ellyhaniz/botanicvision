@@ -1,4 +1,4 @@
-package com.example.plantdex;
+package com.example.plantdex.common;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.plantdex.R;
 
 public class LoginActivity extends AppCompatActivity {
 
