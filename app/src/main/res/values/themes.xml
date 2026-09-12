@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.PlantDex" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/plantdex_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.PlantDex" parent="Base.Theme.PlantDex" />
+
+</resources>

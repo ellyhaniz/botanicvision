@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">PlantDex</string>
+    <string name="app_title">PLANTDEX</string>
+    <string name="select_account_type">Select Account Type</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="register">REGISTER</string>
+
+    <string name="visitor_id">Visitor #ID</string>
+    <string name="plantdex_management">PlantDex Management</string>
+    <string name="app_name_display">PlantDex</string>
+    <string name="identify_discovery">Identify a Discovery</string>
+    <string name="identify_subtitle">Point your camera at a plant or building</string>
+    <string name="collection_progress">Collection Progress</string>
+    <string name="recent_discoveries">Recent Discoveries</string>
+    <string name="view_more">View More</string>
+    <string name="discovered">Discovered</string>
+    <string name="flora">Flora</string>
+    <string name="architecture">Architecture</string>
+    <string name="unlocked">Unlocked</string>
+    <string name="category">Category</string>
+    <string name="rare">Rare</string>
+
+    <string-array name="account_types">
+        <item>Visitor</item>
+        <item>Researcher</item>
+        <item>User Admin</item>
+        <item>System Admin</item>
+    </string-array>
+</resources>

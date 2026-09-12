@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="plantdex_bg">#2D6A4F</color>
+    <color name="plantdex_button">#52B788</color>
+    <color name="plantdex_button_text">#FFFFFF</color>
+    <color name="plantdex_secondary_button">#E4E4E4</color>
+    <color name="plantdex_secondary_text">#333333</color>
+    <color name="plantdex_line">#FFFFFF</color>
+    <color name="plantdex_hint">#D8E8DF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="plantdex_card">#FFFFFF</color>
+    <color name="plantdex_text_primary">#1B1B1B</color>
+    <color name="plantdex_text_muted">#6B7280</color>
+    <color name="plantdex_icon_tile">#D8F3DC</color>
+    <color name="plantdex_rare_bg">#E9E3F5</color>
+    <color name="plantdex_rare_text">#6B4EA0</color>
+    <color name="plantdex_progress_track">#E5E7EB</color>
+    <color name="plantdex_divider">#ECECEC</color>
+</resources>
