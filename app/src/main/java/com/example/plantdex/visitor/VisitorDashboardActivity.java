@@ -22,7 +22,7 @@ public class VisitorDashboardActivity extends AppCompatActivity {
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
 
         // Identify Plant, Recent Discovery, and collection inventory are out
-        // of scope for now — the cards stay for layout fidelity but are inert.
+        // of scope for now — the cards stay for layout fidelity but are inert
         View.OnClickListener comingSoon = v ->
                 Toast.makeText(this, R.string.feature_coming_soon, Toast.LENGTH_SHORT).show();
 
