@@ -9,9 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * Inflates and wires the bottom navigation bar shared by every actor's
- * screens. Visitor gets the 5-icon bar (with the camera / identify
- * shortcut); every other role gets the 4-icon bar.
+ * Inflates and wires the bottom navigation bar for the Visitor screens.
+ * Profile and Camera are shown for layout fidelity but are not wired to
+ * a screen yet — those flows are out of scope for now.
  */
 public final class BottomNavHelper {
 
@@ -20,57 +20,34 @@ public final class BottomNavHelper {
     public static void setup(AppCompatActivity activity, FrameLayout container, String role) {
         if (container == null) return;
 
-        int layoutRes = Roles.hasCameraTab(role) ? R.layout.bottom_nav_5 : R.layout.bottom_nav_4;
-        android.view.View navView = LayoutInflater.from(activity).inflate(layoutRes, container, true);
+        android.view.View navView = LayoutInflater.from(activity).inflate(R.layout.bottom_nav_5, container, true);
 
         ImageButton navHome = navView.findViewById(R.id.navHome);
         ImageButton navProfile = navView.findViewById(R.id.navProfile);
         ImageButton navNotifications = navView.findViewById(R.id.navNotifications);
+        ImageButton navCamera = navView.findViewById(R.id.navCamera);
         ImageButton navLogout = navView.findViewById(R.id.navLogout);
 
         navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, Roles.dashboardFor(role));
+            Intent intent = new Intent(activity, VisitorDashboardActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             activity.startActivity(intent);
         });
 
-        navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, MyAccountActivity.class);
-            intent.putExtra(MyAccountActivity.EXTRA_ROLE, role);
-            activity.startActivity(intent);
-        });
+        navProfile.setOnClickListener(v ->
+                Toast.makeText(activity, R.string.feature_coming_soon, Toast.LENGTH_SHORT).show());
 
         navNotifications.setOnClickListener(v ->
                 Toast.makeText(activity, "You're all caught up — no new notifications.", Toast.LENGTH_SHORT).show());
 
-        navLogout.setOnClickListener(v -> showLogoutDialog(activity, role));
+        navCamera.setOnClickListener(v ->
+                Toast.makeText(activity, R.string.feature_coming_soon, Toast.LENGTH_SHORT).show());
 
-        if (Roles.hasCameraTab(role)) {
-            ImageButton navCamera = navView.findViewById(R.id.navCamera);
-            navCamera.setOnClickListener(v -> activity.startActivity(new Intent(activity, CapturePhotoActivity.class)));
-        }
+        navLogout.setOnClickListener(v -> showLogoutDialog(activity));
     }
 
-    public static void showLogoutDialog(AppCompatActivity activity, String role) {
-        String message;
-        String note = null;
-
-        switch (role) {
-            case Roles.USER_ADMIN:
-                message = "Your admin session will end and you will return to the login page.";
-                note = "This log out will be recorded in the Audit Log against User Admin #ID.";
-                break;
-            case Roles.SYSTEM_ADMIN:
-                message = "Your admin session will end and you will return to the login page.";
-                note = "Administration functions will not be accessible until System Admin #ID logs in again.";
-                break;
-            case Roles.RESEARCHER:
-                message = "Your session will end. Your collectibles and discovery history stay saved.";
-                break;
-            default:
-                message = "Your session will end. Your collectibles and discovery history stay saved.";
-        }
-
-        DialogHelper.showLogout(activity, message, note, () -> DialogHelper.logoutToLogin(activity));
+    public static void showLogoutDialog(AppCompatActivity activity) {
+        String message = "Your session will end. Your collectibles and discovery history stay saved.";
+        DialogHelper.showLogout(activity, message, null, () -> DialogHelper.logoutToLogin(activity));
     }
 }

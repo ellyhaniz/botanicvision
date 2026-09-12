@@ -26,8 +26,7 @@
 
     <string-array name="account_types">
         <item>Visitor</item>
-        <item>Researcher</item>
-        <item>User Admin</item>
-        <item>System Admin</item>
     </string-array>
+
+    <string name="feature_coming_soon">Coming soon</string>
 </resources>

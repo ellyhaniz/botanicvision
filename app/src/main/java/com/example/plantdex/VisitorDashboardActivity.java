@@ -1,9 +1,10 @@
 package com.example.plantdex;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.FrameLayout;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,22 +17,20 @@ public class VisitorDashboardActivity extends AppCompatActivity {
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
 
-        findViewById(R.id.btnProfile).setOnClickListener(v -> {
-            Intent intent = new Intent(this, MyAccountActivity.class);
-            intent.putExtra(MyAccountActivity.EXTRA_ROLE, Roles.VISITOR);
-            startActivity(intent);
-        });
+        // Identify Plant, Recent Discovery, and collection inventory are out
+        // of scope for now — the cards stay for layout fidelity but are inert.
+        View.OnClickListener comingSoon = v ->
+                Toast.makeText(this, R.string.feature_coming_soon, Toast.LENGTH_SHORT).show();
+
+        findViewById(R.id.btnProfile).setOnClickListener(comingSoon);
 
         LinearLayout cardIdentify = findViewById(R.id.cardIdentify);
-        cardIdentify.setOnClickListener(v -> startActivity(new Intent(this, CapturePhotoActivity.class)));
+        cardIdentify.setOnClickListener(comingSoon);
 
         LinearLayout cardRecentDiscovery = findViewById(R.id.cardRecentDiscovery);
-        cardRecentDiscovery.setOnClickListener(v ->
-                startActivity(CollectibleCardActivity.discovered(this, "Tembusu Tree", "0087")));
+        cardRecentDiscovery.setOnClickListener(comingSoon);
 
-        findViewById(R.id.tvViewMoreProgress).setOnClickListener(v ->
-                startActivity(new Intent(this, CollectibleInventoryActivity.class)));
-        findViewById(R.id.tvViewMoreRecent).setOnClickListener(v ->
-                startActivity(new Intent(this, CollectibleInventoryActivity.class)));
+        findViewById(R.id.tvViewMoreProgress).setOnClickListener(comingSoon);
+        findViewById(R.id.tvViewMoreRecent).setOnClickListener(comingSoon);
     }
 }

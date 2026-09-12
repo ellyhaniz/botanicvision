@@ -31,40 +31,6 @@
 
         <!-- Visitor -->
         <activity android:name=".VisitorDashboardActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CapturePhotoActivity" android:screenOrientation="portrait" />
-        <activity android:name=".ConfirmPhotoActivity" android:screenOrientation="portrait" />
-        <activity android:name=".IdentificationResultActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CollectibleInventoryActivity" android:screenOrientation="portrait" />
-        <activity android:name=".SearchInventoryActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CollectibleCardActivity" android:screenOrientation="portrait" />
-
-        <!-- Shared account -->
-        <activity android:name=".MyAccountActivity" android:screenOrientation="portrait" />
-        <activity android:name=".EditMyAccountActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-
-        <!-- User Admin -->
-        <activity android:name=".UserAdminDashboardActivity" android:screenOrientation="portrait" />
-        <activity android:name=".ProfileTypeManagementActivity" android:screenOrientation="portrait" />
-        <activity android:name=".EditProfileTypeActivity" android:screenOrientation="portrait" />
-        <activity android:name=".UserAccountManagementActivity" android:screenOrientation="portrait" />
-        <activity android:name=".EditAccountDetailsActivity" android:screenOrientation="portrait" />
-        <activity android:name=".AuditLogActivity" android:screenOrientation="portrait" />
-
-        <!-- System Admin -->
-        <activity android:name=".SystemAdminDashboardActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CollectibleErrorLogActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CollectibleManagementActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CreateCollectibleActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-
-        <!-- Researcher -->
-        <activity android:name=".ResearcherDashboardActivity" android:screenOrientation="portrait" />
-        <activity android:name=".BotanicalRecordManagementActivity" android:screenOrientation="portrait" />
-        <activity android:name=".ArchitectureRecordManagementActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CreateBotanicalRecordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".CreateArchitectureRecordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ResearcherAuditLogActivity" android:screenOrientation="portrait" />
-
-        <activity android:name=".MainActivity" android:exported="false" />
     </application>
 
 </manifest>
