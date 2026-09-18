@@ -10,6 +10,7 @@
     <string name="register">REGISTER</string>
 
     <string name="visitor_id">Visitor #ID</string>
+    <string name="researcher_id">Researcher #ID</string>
     <string name="plantdex_management">PlantDex Management</string>
     <string name="app_name_display">PlantDex</string>
     <string name="identify_discovery">Identify a Discovery</string>
@@ -23,10 +24,14 @@
     <string name="unlocked">Unlocked</string>
     <string name="category">Category</string>
     <string name="rare">Rare</string>
+    <string name="undiscovered">Undiscovered</string>
+    <string name="undiscovered_title">\?\?\?</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="account_types">
         <item>Visitor</item>
     </string-array>
 
     <string name="feature_coming_soon">Coming soon</string>
-</resources>
+</resources>

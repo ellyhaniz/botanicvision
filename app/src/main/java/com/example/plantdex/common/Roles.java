@@ -2,10 +2,12 @@ package com.example.plantdex.common;
 
 import com.example.plantdex.visitor.VisitorDashboardActivity;
 
-/** Shared role constants. Visitor is the only role currently in scope. */
+/** Shared role constants. Visitor is the only role with a dashboard so far;
+ *  Researcher is in scope for its record-creation screens only. */
 public final class Roles {
 
     public static final String VISITOR = "VISITOR";
+    public static final String RESEARCHER = "RESEARCHER";
 
     private Roles() {}
 
@@ -19,6 +21,6 @@ public final class Roles {
     }
 
     public static String displayId(String role) {
-        return "Visitor #ID";
+        return RESEARCHER.equals(role) ? "Researcher #ID" : "Visitor #ID";
     }
 }
