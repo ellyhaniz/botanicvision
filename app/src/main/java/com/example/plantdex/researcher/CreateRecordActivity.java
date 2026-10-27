@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.plantdex.R;
 import com.example.plantdex.common.BottomNavHelper;
@@ -92,10 +93,10 @@ public class CreateRecordActivity extends AppCompatActivity {
         tvUploadLabel.setText(botanical ? "Upload plant image" : "Upload structure image");
 
         toggleBotanical.setBackgroundResource(botanical ? R.drawable.btn_primary : R.drawable.bg_toggle_inactive);
-        toggleBotanical.setTextColor(getResources().getColor(botanical ? R.color.plantdex_button_text : R.color.plantdex_secondary_text));
+        toggleBotanical.setTextColor(ContextCompat.getColor(this, botanical ? R.color.plantdex_button_text : R.color.plantdex_secondary_text));
 
         toggleArchitectural.setBackgroundResource(botanical ? R.drawable.bg_toggle_inactive : R.drawable.btn_primary);
-        toggleArchitectural.setTextColor(getResources().getColor(botanical ? R.color.plantdex_secondary_text : R.color.plantdex_button_text));
+        toggleArchitectural.setTextColor(ContextCompat.getColor(this, botanical ? R.color.plantdex_secondary_text : R.color.plantdex_button_text));
     }
 
     private void saveBotanical() {

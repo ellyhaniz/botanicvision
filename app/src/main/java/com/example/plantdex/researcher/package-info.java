@@ -1,2 +1,2 @@
-/** Researcher role screens. Botanical/architectural record creation is in scope; other researcher tooling is still pending. */
+/** Researcher role screens: dashboard and botanical/architectural record creation are in scope; other researcher tooling is still pending. */
 package com.example.plantdex.researcher;

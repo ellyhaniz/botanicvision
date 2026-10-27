@@ -61,4 +61,31 @@ public final class DialogHelper {
         activity.startActivity(intent);
         activity.finish();
     }
+
+    /** Shows the "More info" panel for an unlocked collectible — the botanical
+     *  detail fields (family, identification features, fun fact) captured by
+     *  the Researcher's Create Record form but not shown on the card itself. */
+    public static void showPlantInfo(Activity activity, String commonName, String scientificName,
+                                      String family, String features, String funFact) {
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_plant_info, null);
+
+        ((TextView) view.findViewById(R.id.tvInfoCommonName)).setText(commonName);
+        ((TextView) view.findViewById(R.id.tvInfoScientificName)).setText(scientificName);
+        ((TextView) view.findViewById(R.id.tvInfoFamily)).setText(family);
+        ((TextView) view.findViewById(R.id.tvInfoFeatures)).setText(features);
+        ((TextView) view.findViewById(R.id.tvInfoFunFact)).setText(funFact);
+
+        AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setView(view)
+                .setCancelable(true)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x99000000));
+        }
+
+        view.findViewById(R.id.btnCloseInfo).setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
 }

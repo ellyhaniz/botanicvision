@@ -1,5 +1,6 @@
 package com.example.plantdex.visitor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,8 +22,10 @@ public class VisitorDashboardActivity extends AppCompatActivity {
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
 
-        // Identify Plant, Recent Discovery, and collection inventory are out
-        // of scope for now — the cards stay for layout fidelity but are inert
+        // Identify Plant and collection inventory are out of scope for now —
+        // the cards stay for layout fidelity but are inert. The Recent
+        // Discovery and Undiscovered example cards open the collectible
+        // card detail screens.
         View.OnClickListener comingSoon = v ->
                 Toast.makeText(this, R.string.feature_coming_soon, Toast.LENGTH_SHORT).show();
 
@@ -32,7 +35,12 @@ public class VisitorDashboardActivity extends AppCompatActivity {
         cardIdentify.setOnClickListener(comingSoon);
 
         LinearLayout cardRecentDiscovery = findViewById(R.id.cardRecentDiscovery);
-        cardRecentDiscovery.setOnClickListener(comingSoon);
+        cardRecentDiscovery.setOnClickListener(v ->
+                startActivity(new Intent(this, CollectibleCardUnlockedActivity.class)));
+
+        LinearLayout cardUndiscovered = findViewById(R.id.cardUndiscovered);
+        cardUndiscovered.setOnClickListener(v ->
+                startActivity(new Intent(this, CollectibleCardLockedActivity.class)));
 
         findViewById(R.id.tvViewMoreProgress).setOnClickListener(comingSoon);
         findViewById(R.id.tvViewMoreRecent).setOnClickListener(comingSoon);

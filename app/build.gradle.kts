@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.plantdex"
-        minSdk = 36
-        targetSdk = 37
+        minSdk = 26
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

@@ -1,9 +1,11 @@
 package com.example.plantdex.common;
 
+import com.example.plantdex.researcher.ResearcherDashboardActivity;
 import com.example.plantdex.visitor.VisitorDashboardActivity;
 
-/** Shared role constants. Visitor is the only role with a dashboard so far;
- *  Researcher is in scope for its record-creation screens only. */
+/** Shared role constants. Visitor and Researcher each have their own
+ *  dashboard; other roles fall back to the Visitor dashboard until they're
+ *  built out. */
 public final class Roles {
 
     public static final String VISITOR = "VISITOR";
@@ -12,6 +14,9 @@ public final class Roles {
     private Roles() {}
 
     public static Class<?> dashboardFor(String role) {
+        if (RESEARCHER.equals(role)) {
+            return ResearcherDashboardActivity.class;
+        }
         return VisitorDashboardActivity.class;
     }
 

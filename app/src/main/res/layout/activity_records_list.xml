@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/plantdex_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/researcher_id" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/plantdex_management" android:textColor="@color/plantdex_hint" android:textSize="12sp"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnProfile"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_icon_tile"
+            android:src="@drawable/ic_person"
+            android:scaleType="centerInside"
+            android:padding="8dp"
+            android:contentDescription="@string/researcher_id"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="Records Logged"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/bg_panel_top">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Tembusu Tree -->
+                <LinearLayout
+                    android:id="@+id/itemTembusu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/bg_icon_tile" android:src="@drawable/ic_eco" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="@string/flora"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tembusu Tree" android:textColor="@color/plantdex_text_primary" android:textSize="15sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#0231 • Flora • 15 Sep 2026" android:textColor="@color/plantdex_text_muted" android:textSize="12sp"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_pill" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="3dp" android:paddingBottom="3dp" android:text="Logged" android:textColor="@color/plantdex_success_text" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- Bandstand -->
+                <LinearLayout
+                    android:id="@+id/itemBandstand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/bg_icon_tile" android:src="@drawable/ic_building" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="@string/architecture"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bandstand" android:textColor="@color/plantdex_text_primary" android:textSize="15sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#0198 • Architecture • 12 Sep 2026" android:textColor="@color/plantdex_text_muted" android:textSize="12sp"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_pill" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="3dp" android:paddingBottom="3dp" android:text="Logged" android:textColor="@color/plantdex_success_text" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- Raintree -->
+                <LinearLayout
+                    android:id="@+id/itemRaintree"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/bg_icon_tile" android:src="@drawable/ic_eco" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="@string/flora"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Raintree" android:textColor="@color/plantdex_text_primary" android:textSize="15sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#0229 • Flora • 10 Sep 2026" android:textColor="@color/plantdex_text_muted" android:textSize="12sp"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_pill" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="3dp" android:paddingBottom="3dp" android:text="Logged" android:textColor="@color/plantdex_success_text" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- Old Clock Tower -->
+                <LinearLayout
+                    android:id="@+id/itemClockTower"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/bg_icon_tile" android:src="@drawable/ic_building" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="@string/architecture"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Old Clock Tower" android:textColor="@color/plantdex_text_primary" android:textSize="15sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#0184 • Architecture • 06 Sep 2026" android:textColor="@color/plantdex_text_muted" android:textSize="12sp"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_pill" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="3dp" android:paddingBottom="3dp" android:text="Logged" android:textColor="@color/plantdex_success_text" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- Angsana Tree -->
+                <LinearLayout
+                    android:id="@+id/itemAngsana"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/bg_icon_tile" android:src="@drawable/ic_eco" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="@string/flora"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Angsana Tree" android:textColor="@color/plantdex_text_primary" android:textSize="15sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#0217 • Flora • 02 Sep 2026" android:textColor="@color/plantdex_text_muted" android:textSize="12sp"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_pill" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="3dp" android:paddingBottom="3dp" android:text="Logged" android:textColor="@color/plantdex_success_text" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- Fountain Gate -->
+                <LinearLayout
+                    android:id="@+id/itemFountainGate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/bg_icon_tile" android:src="@drawable/ic_building" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="@string/architecture"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fountain Gate" android:textColor="@color/plantdex_text_primary" android:textSize="15sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#0176 • Architecture • 29 Aug 2026" android:textColor="@color/plantdex_text_muted" android:textSize="12sp"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_pill" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="3dp" android:paddingBottom="3dp" android:text="Logged" android:textColor="@color/plantdex_success_text" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/navContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

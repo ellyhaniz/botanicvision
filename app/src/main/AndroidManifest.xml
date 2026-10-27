@@ -25,17 +25,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".common.RegisterActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".common.ResetPasswordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".common.RoleSplashActivity" android:screenOrientation="portrait" />
+        <activity android:name=".common.RegisterActivity" android:exported="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".common.ResetPasswordActivity" android:exported="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".common.RoleSplashActivity" android:exported="true" android:screenOrientation="portrait" />
 
         <!-- Visitor -->
-        <activity android:name=".visitor.VisitorDashboardActivity" android:screenOrientation="portrait" />
-        <activity android:name=".visitor.CollectibleCardUnlockedActivity" android:screenOrientation="portrait" />
-        <activity android:name=".visitor.CollectibleCardLockedActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.VisitorDashboardActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.CollectibleCardUnlockedActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.CollectibleCardLockedActivity" android:exported="true" android:screenOrientation="portrait" />
 
         <!-- Researcher -->
-        <activity android:name=".researcher.CreateRecordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".researcher.ResearcherDashboardActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".researcher.RecordsListActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".researcher.RecordDetailActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".researcher.CreateRecordActivity" android:exported="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
