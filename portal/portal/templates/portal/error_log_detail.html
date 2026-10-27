@@ -1,0 +1,19 @@
+{% extends "portal/base.html" %}
+{% block title %}Error log #{{ log.pk }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'error_logs' %}">← Back to error logs</a>
+<h1>Error log #{{ log.pk }}</h1>
+
+<div class="card form-card">
+  <dl class="details">
+    <dt>Time</dt><dd>{{ log.occurred_at|date:"d M Y, H:i:s" }}</dd>
+    <dt>Error type</dt><dd>{{ log.get_error_type_display }}</dd>
+    <dt>Status</dt><dd><span class="pill pill-{{ log.status }}">{{ log.get_status_display }}</span></dd>
+    <dt>Collectible</dt><dd>{{ log.collectible_name|default:"—" }}</dd>
+    <dt>User</dt><dd>{{ log.visitor_username|default:"—" }}</dd>
+    <dt>Device</dt><dd>{{ log.device_info|default:"—" }}</dd>
+    <dt>Message</dt><dd>{{ log.message }}</dd>
+    <dt>Details</dt><dd>{% if log.details %}<pre class="error-details">{{ log.details }}</pre>{% else %}—{% endif %}</dd>
+  </dl>
+</div>
+{% endblock %}

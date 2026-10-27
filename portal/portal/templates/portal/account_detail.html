@@ -1,0 +1,31 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ target.username }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'accounts' %}">← Back to accounts</a>
+<h1>{{ target.username }}</h1>
+
+<div class="card form-card">
+  <dl class="details">
+    <dt>Username</dt><dd>{{ target.username }}</dd>
+    <dt>Full name</dt><dd>{{ target.get_full_name|default:"—" }}</dd>
+    <dt>Email</dt><dd>{{ target.email|default:"—" }}</dd>
+    <dt>Profile type</dt><dd>{{ target_role|default:"Visitor" }}</dd>
+    <dt>Status</dt>
+    <dd>{% if target.is_active %}<span class="pill pill-active">Active</span>
+        {% else %}<span class="pill pill-suspended">Suspended</span>{% endif %}</dd>
+    <dt>Created</dt><dd>{{ target.date_joined|date:"d M Y, H:i" }}</dd>
+    <dt>Last login</dt><dd>{{ target.last_login|date:"d M Y, H:i"|default:"Never" }}</dd>
+  </dl>
+
+  <div class="actions">
+    <a class="btn-sm" href="{% url 'account_edit' target.pk %}">Edit account</a>
+    {% if is_self %}
+      <span class="muted">You can't change the status of your own account.</span>
+    {% elif target.is_active %}
+      <a class="btn-sm btn-danger" href="{% url 'account_status' target.pk %}">Suspend</a>
+    {% else %}
+      <a class="btn-sm" href="{% url 'account_status' target.pk %}">Reactivate</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

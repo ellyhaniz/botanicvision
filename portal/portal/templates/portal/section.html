@@ -1,0 +1,7 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ section.title }}{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'dashboard' %}">← Back to dashboard</a>
+<h1>{{ section.title }}</h1>
+<div class="card empty">🚧 This page is under construction.</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "portal/base.html" %}
+{% block title %}Log in · PlantDex{% endblock %}
+{% block content %}
+<div class="login-wrap">
+  <form method="post" class="card login-card">
+    {% csrf_token %}
+    <h1>🌿 PlantDex</h1>
+    <p class="muted">Staff Portal · Singapore Botanic Gardens</p>
+
+    {% if form.errors %}
+      <div class="error">Incorrect username or password, or the account is suspended.</div>
+    {% elif next %}
+      <div class="msg msg-info">Please log in to continue. If you were signed in, your session ended after a period of inactivity.</div>
+    {% endif %}
+    
+
+    <label for="id_username">Username</label>
+    {{ form.username }}
+    <label for="id_password">Password</label>
+    {{ form.password }}
+
+    <input type="hidden" name="next" value="{{ next }}">    
+    <button class="btn">Log in</button>
+    <p class="center"><a class="link" href="{% url 'password_reset' %}">Forgot your password?</a></p>
+  </form>
+</div>
+{% endblock %}

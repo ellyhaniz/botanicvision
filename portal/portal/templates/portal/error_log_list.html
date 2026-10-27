@@ -1,0 +1,79 @@
+{% extends "portal/base.html" %}
+{% block title %}Error Logs · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'dashboard' %}">← Back to dashboard</a>
+<h1>Error Logs</h1>
+<p class="muted">Failed card unlocks and handbook sync issues reported by the mobile app.</p>
+
+<form method="get" class="card filters">
+  <div>
+    <label>Error type</label>
+    <select name="type">
+      <option value="">All</option>
+      {% for value, label in error_types %}
+        <option value="{{ value }}" {% if filters.type == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Status</label>
+    <select name="status">
+      <option value="">All</option>
+      {% for value, label in statuses %}
+        <option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Collectible</label>
+    <input type="text" name="collectible" value="{{ filters.collectible }}" placeholder="name">
+  </div>
+  <div>
+    <label>User</label>
+    <input type="text" name="user" value="{{ filters.user }}" placeholder="visitor username">
+  </div>
+  <div>
+    <label>From</label>
+    <input type="date" name="from" value="{{ filters.from }}">
+  </div>
+  <div>
+    <label>To</label>
+    <input type="date" name="to" value="{{ filters.to }}">
+  </div>
+  <div class="filter-btns">
+    <button class="btn-sm">Filter</button>
+    <a class="btn-sm btn-light" href="{% url 'error_logs' %}">Clear</a>
+  </div>
+</form>
+
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr><th>Time</th><th>Type</th><th>Collectible</th><th>User</th><th>Message</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for log in page %}
+      <tr>
+        <td>{{ log.occurred_at|date:"d M Y, H:i:s" }}</td>
+        <td>{{ log.get_error_type_display }}</td>
+        <td>{{ log.collectible_name|default:"—" }}</td>
+        <td>{{ log.visitor_username|default:"—" }}</td>
+        <td>{{ log.message|truncatechars:60 }}</td>
+        <td><span class="pill pill-{{ log.status }}">{{ log.get_status_display }}</span></td>
+        <td><a class="link" href="{% url 'error_log_detail' log.pk %}">View</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="empty">No error logs found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page.has_other_pages %}
+<div class="pager">
+  {% if page.has_previous %}<a href="?{{ querystring }}&page={{ page.previous_page_number }}">← Prev</a>{% endif %}
+  <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a href="?{{ querystring }}&page={{ page.next_page_number }}">Next →</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PlantDex Staff Portal{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'portal/style.css' %}">
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <header class="topbar">
+    <a class="brand" href="{% url 'dashboard' %}">🌿 PlantDex <span>Staff Portal</span></a>
+    <div class="who">
+      <span class="badge">{{ role|default:"No role" }}</span>
+      <span>{{ user.get_username }}</span>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}<button class="btn-ghost">Log out</button>
+      </form>
+    </div>
+  </header>
+  {% endif %}
+  <main>
+    {% if messages %}
+      {% for m in messages %}
+        <div class="msg msg-{{ m.tags }}">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
