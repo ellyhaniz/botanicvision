@@ -1,0 +1,72 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ cfg.title }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'dashboard' %}">← Back to dashboard</a>
+<div class="page-head">
+  <div>
+    <h1>{{ cfg.title }}</h1>
+    <p class="muted">{{ cfg.blurb }}</p>
+  </div>
+  <a class="btn-sm" href="{% url cfg.url_new %}">+ New {{ cfg.singular }}</a>
+</div>
+
+<form method="get" class="card filters">
+  <div style="grid-column: span 2">
+    <label>Search</label>
+    <input type="text" name="q" value="{{ q }}" placeholder="{{ cfg.search_placeholder }}">
+  </div>
+  <div class="filter-btns">
+    <button class="btn-sm">Search</button>
+    <a class="btn-sm btn-light" href="{% url cfg.url_list %}">Clear</a>
+  </div>
+</form>
+
+<p class="muted count">{{ page.paginator.count }} record{{ page.paginator.count|pluralize }} found</p>
+
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        {% for heading, attr in cfg.columns %}<th>{{ heading }}</th>{% endfor %}
+        <th>Status</th><th>Updated</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>
+          {% if row.obj.image %}<img class="thumb" src="{{ row.obj.image.url }}" alt="">
+          {% else %}<span class="thumb thumb-empty"></span>{% endif %}
+        </td>
+        {% for cell in row.cells %}<td>{{ cell|default:"—" }}</td>{% endfor %}
+        <td>
+          {% if row.obj.status == "PUBLISHED" %}<span class="pill pill-active">Published</span>
+          {% else %}<span class="pill pill-draft">Draft</span>{% endif %}
+        </td>
+        <td>{{ row.obj.updated_at|date:"d M Y" }}</td>
+        <td>
+          <div class="row-actions">
+            <a class="link" href="{% url cfg.url_detail row.obj.pk %}">View</a>
+            <a class="link" href="{% url cfg.url_edit row.obj.pk %}">Edit</a>
+            <a class="link link-danger" href="{% url cfg.url_delete row.obj.pk %}">Delete</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="{{ cfg.columns|length|add:4 }}" class="empty">
+        {% if q %}No results found.{% else %}No records available yet.{% endif %}
+      </td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page.has_other_pages %}
+<div class="pager">
+  {% if page.has_previous %}<a href="?{{ querystring }}&page={{ page.previous_page_number }}">← Prev</a>{% endif %}
+  <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a href="?{{ querystring }}&page={{ page.next_page_number }}">Next →</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

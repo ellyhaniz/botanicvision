@@ -1,1 +1,2 @@
 Django>=6.1.1,<6.2
+Pillow>=10.0   # needed for image uploads (botanical / architecture records)

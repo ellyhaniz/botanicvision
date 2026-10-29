@@ -1,0 +1,18 @@
+{% extends "portal/base.html" %}
+{% block title %}Delete {{ name }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url cfg.url_detail record.pk %}">← Back to record</a>
+<h1>Delete {{ cfg.singular }}?</h1>
+
+<form method="post" class="card form-card">
+  {% csrf_token %}
+  <p><strong>{{ name }}</strong> will be removed from the record list, from search results and from
+     what visitors can identify.</p>
+  <p class="muted">The row is kept in the database (soft delete), so a developer can restore it if it
+     was removed by mistake. The deletion is written to the audit log.</p>
+  <div class="actions">
+    <button class="btn-sm btn-danger">Yes, delete</button>
+    <a class="btn-sm btn-light" href="{% url cfg.url_detail record.pk %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

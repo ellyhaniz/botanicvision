@@ -12,7 +12,7 @@ Set-Location $PSScriptRoot
 $env:DB_ENGINE = "mssql"
 $env:DB_HOST   = "plantdex-fyp15-ea.database.windows.net"
 $env:DB_NAME   = "PlantDexDB"
-$env:DB_DRIVER = "ODBC Driver 17 for SQL Server"
+$env:DB_DRIVER = "ODBC Driver 18 for SQL Server"
 $env:DB_USER   = Read-Host "Azure admin login"
 $env:DB_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
     [Runtime.InteropServices.Marshal]::SecureStringToBSTR((Read-Host "Azure password" -AsSecureString)))

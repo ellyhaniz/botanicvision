@@ -117,3 +117,77 @@ class CollectibleErrorLog(models.Model):
 
     def __str__(self):
         return f"{self.occurred_at:%Y-%m-%d %H:%M} {self.error_type} {self.collectible_name}"
+
+
+# ---------------------------------------------------------------------------
+# Researcher records (RS-04 .. RS-13)
+# ---------------------------------------------------------------------------
+class ActiveManager(models.Manager):
+    """Default manager: hides soft-deleted records everywhere (lists, search, detail)."""
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False)
+
+
+class RecordBase(models.Model):
+    """Fields shared by botanical and architecture records."""
+    DRAFT = "DRAFT"
+    PUBLISHED = "PUBLISHED"
+    STATUSES = [(DRAFT, "Draft"), (PUBLISHED, "Published")]
+
+    # Draft = still being checked. Only Published records should be shown to
+    # visitors or linked to a collectible (risk R01).
+    status = models.CharField(max_length=10, choices=STATUSES, default=PUBLISHED)
+
+    # Soft delete (risk R09): the row is kept, but hidden everywhere.
+    is_deleted = models.BooleanField(default=False, db_index=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        on_delete=models.SET_NULL, related_name="+",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = ActiveManager()        # normal queries: not deleted
+    all_objects = models.Manager()   # includes soft-deleted (admin / recovery)
+
+    class Meta:
+        abstract = True
+
+    def soft_delete(self):
+        self.is_deleted = True
+        self.deleted_at = timezone.now()
+        self.save(update_fields=["is_deleted", "deleted_at", "updated_at"])
+
+
+class BotanicalRecord(RecordBase):
+    common_name = models.CharField(max_length=100, db_index=True)
+    scientific_name = models.CharField(max_length=150, db_index=True)
+    family = models.CharField(max_length=100, db_index=True)
+    image = models.ImageField(upload_to="botanical/%Y/%m/")
+    identification_features = models.TextField()
+    fun_fact = models.TextField()
+
+    class Meta:
+        ordering = ["common_name"]
+
+    def __str__(self):
+        return self.common_name
+
+
+class ArchitectureRecord(RecordBase):
+    name = models.CharField(max_length=150, db_index=True)
+    image = models.ImageField(upload_to="architecture/%Y/%m/")
+    location = models.CharField(max_length=150, db_index=True)
+    architectural_style = models.CharField(max_length=100)
+    # Free text on purpose: heritage dates are often a year or "c. 1900".
+    construction_date = models.CharField(max_length=50)
+    description = models.TextField()
+    fun_fact = models.TextField(blank=True)   # optional
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name

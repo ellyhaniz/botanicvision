@@ -9,7 +9,7 @@ Visitors only use the Android app. This portal is for three staff roles:
 |---|---|
 | **User Admin** | Manage staff accounts and profile types (roles and their permissions) |
 | **System Admin** | Manage discovery collectibles, read collectible error logs |
-| **Researcher** | Maintain botanical and architectural records |
+| **Researcher** | Create, view, update, delete and search botanical and architecture records (with images) |
 
 All three can view the **Audit Log**.
 
@@ -26,7 +26,8 @@ venv\Scripts\Activate.ps1          # (cmd.exe: venv\Scripts\activate)
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py seed_roles        # roles, profile types and 3 demo logins
-python manage.py seed_demo         # optional: 21 extra test accounts
+python manage.py seed_demo         # optional: 21 extra test accounts + sample error logs
+python manage.py seed_records      # optional: 15 sample plants + 15 sample structures
 python manage.py runserver
 ```
 
@@ -70,9 +71,10 @@ portal/                   The one app that holds the whole portal
   templates/portal/       HTML (base.html is the shared frame)
   templates/403.html, 404.html   Styled error pages
   static/portal/style.css All styling, shared by every page
-  management/commands/    seed_roles, seed_demo
+  records.py              Researcher: botanical + architecture CRUD (one shared code path)
+  management/commands/    seed_roles, seed_demo, seed_records
   migrations/             Database history. COMMIT THESE.
-  tests.py                40 automated tests
+  tests.py, test_records.py   113 automated tests
 ```
 
 ### The one idea to understand: how access control works
@@ -91,9 +93,16 @@ portal/                   The one app that holds the whole portal
 
 ---
 
-## Recipe: adding a new page (for example Botanical Records)
+## Recipe: adding a new page
 
-Follow the same steps every time. `account_views.py` is a complete worked example.
+Follow the same steps every time. `account_views.py` and `error_log_views.py` are worked
+examples of hand-written pages.
+
+> **Shortcut for any "list / create / view / edit / delete / search" feature** (for example
+> System Admin collectibles): add a model, a `ModelForm`, and copy one `RecordConfig` at the
+> bottom of `portal/records.py`. You get all six pages, audit logging and the templates for
+> free. Then add `*yourconfig.urls` to `portal/urls.py` (above the last line). Botanical and
+> architecture records are both built this way.
 
 1. **Section.** Make sure the slug exists in `SECTIONS` in `roles.py` (the Researcher and
    System Admin ones are already there). Run `python manage.py seed_roles`: it creates the
@@ -125,6 +134,8 @@ Follow the same steps every time. `account_views.py` is a complete worked exampl
 
 ### Conventions we follow
 
+- Text boxes: browsers send line breaks as `\r\n`. Use `LineBreakTextarea` (forms.py) so
+  unchanged text is not reported as edited.
 - Edit and delete actions that change data use **POST**, with `{% csrf_token %}`.
   A GET must never change anything (see the suspend confirmation page).
 - Destructive actions have a confirmation page.
@@ -148,6 +159,8 @@ Follow the same steps every time. `account_views.py` is a complete worked exampl
 | A new page shows "under construction" | Its URL is below `section/<slug:slug>/` in `urls.py`. Move it above |
 | Pasting code into `manage.py shell` gives `IndentationError` | Paste breaks indentation. Use a management command or script file instead |
 | `no such table` / missing column | Run `python manage.py migrate` after every `git pull` |
+| `ImageField ... requires Pillow` | `pip install -r requirements.txt` (Pillow is listed) |
+| Record images show as broken | Images are files in `media/` on **one computer**; only the path is in the database (see INSTALLATION.md, shared database) |
 | CSS changes do not appear | Hard refresh with `Ctrl+Shift+R` |
 
 ---

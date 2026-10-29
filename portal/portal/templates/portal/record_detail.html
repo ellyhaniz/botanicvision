@@ -1,0 +1,26 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ name }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url cfg.url_list %}">← Back to {{ cfg.title|lower }}</a>
+<h1>{{ name }}</h1>
+
+<div class="card form-card wide">
+  {% if record.image %}<img class="detail-img" src="{{ record.image.url }}" alt="{{ name }}">{% endif %}
+  <dl class="details">
+    {% for label, value in fields %}
+      <dt>{{ label }}</dt><dd class="prewrap">{{ value|default:"—" }}</dd>
+    {% endfor %}
+    <dt>Status</dt>
+    <dd>{% if record.status == "PUBLISHED" %}<span class="pill pill-active">Published</span>
+        {% else %}<span class="pill pill-draft">Draft</span>{% endif %}</dd>
+    <dt>Created</dt>
+    <dd>{{ record.created_at|date:"d M Y, H:i" }}{% if record.created_by %} by {{ record.created_by.get_username }}{% endif %}</dd>
+    <dt>Last updated</dt><dd>{{ record.updated_at|date:"d M Y, H:i" }}</dd>
+  </dl>
+  <div class="actions">
+    <a class="btn-sm" href="{% url cfg.url_edit record.pk %}">Edit</a>
+    <a class="btn-sm btn-danger" href="{% url cfg.url_delete record.pk %}">Delete</a>
+    <a class="btn-sm btn-light" href="{% url cfg.url_list %}">Back to list</a>
+  </div>
+</div>
+{% endblock %}

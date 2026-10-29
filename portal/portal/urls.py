@@ -1,6 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views, account_views, profile_views, error_log_views
+from .records import architecture, botanical
 
 urlpatterns = [
     path("", views.dashboard, name="dashboard"),
@@ -34,5 +35,10 @@ urlpatterns = [
         name="password_reset_complete"),
 
 
+    # Researcher records (botanical + architecture)
+    *botanical.urls,
+    *architecture.urls,
+
+    # keep this LAST: placeholder page for sections that have no real page yet
     path("section/<slug:slug>/", views.section, name="section"),
 ]

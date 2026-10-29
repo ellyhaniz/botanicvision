@@ -192,3 +192,23 @@ a.btn { display:block; text-align:center; text-decoration:none; }
 .card.empty h1 { margin:0 0 .6rem; }
 .card.empty p { margin:.3rem 0; }
 .card.empty .btn-sm { margin-top:1.2rem; }
+
+/* ---------- Records (botanical / architecture) ---------- */
+.page-head { display:flex; justify-content:space-between; align-items:flex-start;
+  gap:1rem; flex-wrap:wrap; }
+.page-head h1 + .muted { margin-bottom:1.25rem; }
+.thumb { display:block; width:44px; height:44px; object-fit:cover; border-radius:8px;
+  border:1px solid #e3ebe6; background:#eef2ef; }
+.row-actions { display:flex; gap:.9rem; }
+.link-danger { color:#b3261e; }
+.link-danger:hover { color:#7d1a14; }
+.form-card.wide { max-width:760px; }
+.prewrap { white-space:pre-wrap; }
+.detail-img { display:block; max-width:100%; width:340px; border-radius:12px;
+  border:1px solid #e3ebe6; margin:0 0 1.25rem; }
+.detail-img.small { width:200px; margin:.6rem 0 0; }
+.field input[type=file] { height:auto; padding:.5rem; background:#fff; }
+.msg-warning { background:#fff6e0; color:#7a5200; border-color:#f1d9a0; }
+.msg a { color:inherit; font-weight:700; }
+.pill-draft { background:#fff2d6; color:#8a5a00; }
+[hidden] { display:none !important; }

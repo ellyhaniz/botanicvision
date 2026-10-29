@@ -86,12 +86,14 @@ stored in Git, so you build it from the code:
 python manage.py migrate
 python manage.py seed_roles
 python manage.py seed_demo
+python manage.py seed_records
 ```
 
 | Command | What it does |
 |---|---|
 | `migrate` | Creates all the tables |
 | `seed_roles` | Creates the three roles, their permissions, and 3 demo logins |
+| `seed_records` | *(optional)* 15 sample plants and 15 sample structures, with placeholder pictures. All values except the real plant names are random, so treat them as test data. `python manage.py seed_records --clear` removes them again |
 | `seed_demo` | *(optional)* Adds 21 test accounts: 12 researchers, 8 visitors, 1 suspended staff. Handy for trying search, paging and suspend |
 
 All three are safe to run again. They skip anything that already exists and never
@@ -168,7 +170,7 @@ Then open a pull request on GitHub for a teammate to review.
 
 1. **Always commit migration files** (`portal/migrations/000X_*.py`). Teammates cannot
    build the tables without them.
-2. **Never commit** `db.sqlite3`, `venv/`, or passwords. `.gitignore` already excludes them.
+2. **Never commit** `db.sqlite3`, `media/`, `venv/`, or passwords. `.gitignore` already excludes them.
 3. After changing `models.py`: `python manage.py makemigrations portal`, then `migrate`,
    then commit the new migration file and tell the team.
 4. **Two people changed models at the same time?** Django reports a migration conflict
@@ -184,6 +186,7 @@ del db.sqlite3
 python manage.py migrate
 python manage.py seed_roles
 python manage.py seed_demo
+python manage.py seed_records
 ```
 
 ---
@@ -295,3 +298,24 @@ the browser page) and ask in the team chat.
 - [ ] Do not run `seed_demo`
 - [ ] Replace the console email setup in `MAILERS` (settings.py) with real SMTP
 - [ ] Serve over HTTPS and run behind a production server (not `runserver`)
+
+---
+
+## 11. Images and a shared database (read this if the team shares one SQL Server / Azure SQL)
+
+Botanical and architecture records store **only the file path** of their picture in the
+database. The picture itself is saved in the `media/` folder on the computer that uploaded
+it. If several people share one database, they all see the same records, but **only the
+person who uploaded a picture has the file**: everyone else sees a broken image.
+
+For now, treat pictures as per-machine test data (the `seed_records` placeholders are fine
+for this). Before a shared demo, the team must pick one fix:
+
+- store images in **Azure Blob Storage** (needs `django-storages` and a small settings change), or
+- copy the same `media/` folder to everyone, or
+- agree that only one person's machine is used for the demo.
+
+Migrations for a shared database: **one person** runs `python manage.py migrate`. After
+merging the records feature, that applies `0004_architecturerecord_botanicalrecord` on top
+of `0003_collectibleerrorlog`. Nothing existing is changed.
+

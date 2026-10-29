@@ -9,6 +9,16 @@ the Preliminary Technical Documentation (PTD).
 | Role | Stories | Done | Left |
 |---|---|---|---|
 | User Admin (UA) | 10 | **10** | 0 |
+| Researcher (RS) | 13 | **13** | 0 |
+| System Admin (SA) | 9 | 4 | 5 |
+| **Total** | **32** | **27** | **5** |
+
+The three "Log in / Log out / View audit log" stories are shared by all roles.
+**User Admin and Researcher are finished. The only work left is System Admin
+collectibles (SA-04 to SA-08).** The Researcher records they must link to now exist.
+
+---|---|---|---|
+| User Admin (UA) | 10 | **10** | 0 |
 | System Admin (SA) | 9 | 4 | 5 |
 | Researcher (RS) | 13 | 3 | 10 |
 | **Total** | **32** | **17** | **15** |
@@ -33,7 +43,7 @@ real remaining work is **15 stories**: 5 for System Admin, 10 for Researcher.
 - **Forgot / reset password** (emailed one-hour link, used once, logged to the audit log).
   Emails print in the terminal during development
 - **Session timeout:** 15 minutes of inactivity, plus a notice on the login page
-- 40 automated tests (`python manage.py test`)
+- 113 automated tests (`python manage.py test`)
 - Setup for teammates: `README.md`, `INSTALLATION.md`, `requirements.txt`, seed commands
 
 ### ⬜ To do
@@ -104,15 +114,16 @@ built, add a nullable `collectible` foreign key. Check the fields against PTD 4.
 `seed_demo` adds 30 sample entries, and test rows can be added in Django `/admin/`.
 
 **Order of work**
-1. **SA-09 error logs first.** It does not depend on anything else.
-2. Collectibles (SA-04 to SA-08) **after** the Researcher records exist, because a
-   collectible must link to a *verified* botanical or architectural record, and must not
-   be duplicated for the same object.
+1. ✅ SA-09 error logs: done.
+2. Collectibles (SA-04 to SA-08). **The Researcher records now exist**, so a collectible can
+   link to a *verified* (Published) `BotanicalRecord` or `ArchitectureRecord`, and must not
+   be duplicated for the same object. Copy a `RecordConfig` in `portal/records.py` to get the
+   list / create / view / edit / delete / search pages and audit logging almost for free.
 
 **Notes and risks**
 - [ ] ⚠️ **Agree the table design with whoever builds the mobile API.** The mobile
       backend writes the unlock failures that SA-09 displays, and reads collectibles.
-- [ ] Image upload needs `pip install Pillow`, plus `MEDIA_ROOT` and `MEDIA_URL`
+- [ ] Collectible images can reuse the existing `MEDIA_*` settings and Pillow (already installed)
 - [ ] ⚠️ **Error-log access conflict.** The access table (7.2) gives collectible error
       logs to *Researchers*, but the user stories (SA-09) and scope give them to
       *System Admin*. The portal follows the user stories
@@ -125,45 +136,59 @@ built, add a nullable `collectible` foreign key. Check the fields against PTD 4.
 
 ---
 
-## 4. Researcher (RS)
+## 4. Researcher (RS): all stories done ✅
 
 | Story | Feature | Status |
 |---|---|---|
 | RS-01 / 02 | Log in, log out | ✅ |
 | RS-03 | View audit log | ✅ (see the scope question in section 1) |
-| RS-09 | Create **botanical** record (common name, scientific name, family, image, identification features, fun fact) | ⬜ |
-| RS-10 | View botanical record | ⬜ |
-| RS-11 | Update botanical record | ⬜ |
-| RS-12 | Delete botanical record, with confirmation | ⬜ |
-| RS-13 | Search botanical records by common name, scientific name or family | ⬜ |
-| RS-04 | Create **architecture** record (name, image, location, style, construction date, description) | ⬜ |
-| RS-05 | View architecture record | ⬜ |
-| RS-06 | Update architecture record | ⬜ |
-| RS-07 | Delete architecture record, with confirmation | ⬜ |
-| RS-08 | Search architecture records by name, location or keyword | ⬜ |
+| RS-09 | Create **botanical** record (common name, scientific name, family, image, identification features, fun fact) | ✅ |
+| RS-10 | View botanical record | ✅ |
+| RS-11 | Update botanical record (image optional: leave empty to keep it) | ✅ |
+| RS-12 | Delete botanical record, with a confirmation page | ✅ |
+| RS-13 | Search by common name, scientific name or family | ✅ |
+| RS-04 | Create **architecture** record (name, image, location, style, construction date, description) | ✅ |
+| RS-05 | View architecture record | ✅ |
+| RS-06 | Update architecture record | ✅ |
+| RS-07 | Delete architecture record, with a confirmation page | ✅ |
+| RS-08 | Search by name, location, style or keyword | ✅ |
 
-**Needs new models:** `BotanicalRecord` and `ArchitectureRecord`.
+**What was built (and the PTD rules it follows)**
+- Both record types share one code path (`portal/records.py`) and one test suite.
+- All required fields enforced, image required on create (PTD 7.4.3). Images must be
+  JPG / PNG / WebP and at most 5 MB, and are verified as real images by Pillow.
+- **Duplicate warning** while typing the scientific name (botanical) or structure name
+  (architecture): it warns and links to the existing record, but never blocks saving.
+- **Soft delete** (risk R09): a deleted record is hidden from lists, search and detail pages
+  but stays in the database. Deleting asks for confirmation first.
+- If a record was removed by someone else while you edit it, you return to the list with a message.
+- Paginated (10 per page). An empty search box shows everything.
+- Every create, update and delete is in the audit log. An update lists **only the fields that
+  changed**, and an edit with no change writes nothing.
+- Each record has a **Draft / Published** status (risk R01).
+- `python manage.py seed_records` adds 15 sample plants and 15 sample structures.
 
-**Validation rules from the PTD (7.4.3)**
-- All required fields present and valid
-- Warn (and allow cancel or continue) if a **scientific name** already exists (botanical),
-  or the structure may already exist (architecture)
+### ⚠️ Open questions for RS (answer, then update the PTD)
+- [ ] **Soft vs hard delete.** RS-07 / RS-12 say "permanently removed", but we followed risk
+      R09 (soft delete). Reword the use cases, or tell us to hard-delete
+- [ ] **Draft / Published** is not in any use case. Keep it (collectibles must link only to
+      *verified* records) and add it to the record data in PTD 4.2
+- [ ] **Construction date** is free text (`1868`, `c. 1900`), because heritage dates are often
+      approximate. The PTD says "date": confirm
+- [ ] **Architecture "fun fact".** The PUM screen has it, the PTD fields do not. It is optional
+- [ ] **Researcher audit scope** (see section 1)
+- [ ] **Duplicate rule for architecture** is the structure name only
+- [ ] **No-JavaScript browsers** get no duplicate warning (everything else still works)
+- [ ] ⚠️ **Images with a shared database.** Only the picture path is stored in the database,
+      the file stays on the uploader's computer (see INSTALLATION.md section 11). Choose:
+      Azure Blob Storage, a shared folder, or one demo machine
 
-**Order of work:** build **Botanical Records first** (RS-09 to RS-13). It teaches the
-whole create / view / update / delete / search pattern. Architecture is then a near copy.
-
-**Notes and risks**
-- [ ] ⚠️ **Hard delete or soft delete?** RS-07 and RS-12 say "permanently removed", but
-      risk R09 recommends a soft delete (`is_deleted` flag) because collectibles link to
-      these records. We suggest soft delete, then update the use cases
-- [ ] ⚠️ **Draft vs Published status** (risk R01) so unverified records are not shown to
-      visitors. Collectibles may only link to *verified* records
-- [ ] Image upload: `pip install Pillow`, `MEDIA_ROOT`, `MEDIA_URL`. Check file type and
-      size (PTD 7.4.3). Add `media/` serving for development only
-- [ ] Every create, update and delete calls `log_action(...)` (see the recipe in README)
-- [ ] Add indexes on the searched columns (risk R05, 2-second search limit)
-- [ ] The reference images may later feed the AI training set, so agree the storage
-      location with whoever trains the model
+### Known limitations of the records pages
+- [ ] Replaced or deleted images stay on disk (the file is not removed)
+- [ ] EXIF data (GPS, camera) is not stripped from uploads (PTD 4.4 asks for it before AI training)
+- [ ] Uploaded images are served by Django only in development. Production needs a web server or cloud storage
+- [ ] No restore page for soft-deleted records (clear `is_deleted` in `/admin/` or the shell)
+- [ ] Researchers cannot yet see which collectibles use a record before deleting it. Add that check with SA-04
 
 ---
 
@@ -182,7 +207,8 @@ whole create / view / update / delete / search pattern. Architecture is then a n
 
 ## 6. Testing and quality
 
-- ✅ 40 automated tests cover login, access control, audit log, accounts, profile types,
+- ✅ 113 automated tests cover login, access control, audit log, accounts, profile types,
+  error logs, botanical and architecture records,
   password reset and the seed commands
 - [ ] Add tests alongside every new feature (happy path, 403, audit entry)
 - [ ] Manual test pass on a real phone-sized browser window (the layout is responsive,
@@ -205,13 +231,14 @@ whole create / view / update / delete / search pattern. Architecture is then a n
 
 ## 8. Suggested order for the team
 
-1. **Researcher: Botanical Records** (RS-09 to RS-13). Teaches the pattern for everyone
-2. **System Admin: Error Logs** (SA-09). Independent, so someone can do it in parallel
-3. **Researcher: Architecture Records** (RS-04 to RS-08). Reuse the botanical code
-4. **System Admin: Collectibles** (SA-04 to SA-08). Needs steps 1 and 3
-5. **Open questions** in sections 2 to 5, then the polish and deployment lists
+1. **System Admin: Collectibles** (SA-04 to SA-08), linking to Published records. Reuse
+   `portal/records.py`. Add the nullable `collectible` foreign key to `CollectibleErrorLog`
+2. **Decide how images are shared** (section 4) before any shared demo
+3. **Open questions** in sections 2 to 5, then the polish and deployment lists
+4. **Connect the mobile app.** The Android app is still a UI prototype with a hard-coded
+   demo login and no networking, and no mobile API exists yet to write error logs or read records
+5. Decide `minSdk` for the Android app (currently 36, Android 16 and newer) against the PTD
+   goal of "a wide range of Android smartphones"
 
-Suggested split: one person on Botanical, one on Error Logs, then Architecture and
-Collectibles. Each person works on their own branch and adds tests with their feature.
-The timeline in the PTD puts feature integration in Phase 9 (4 to 17 Oct) and accuracy
-work in Phase 10, with the final application due on **14 Nov 2026**.
+The PTD puts feature integration in Phase 9 (4 to 17 Oct) and accuracy work in Phase 10,
+with the final application due on **14 Nov 2026**.
