@@ -9,10 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.plantdex.R;
+import com.example.plantdex.common.boundary.LoginActivity;
 
 /**
- * Small shared helpers for the confirmation dialogs used across every actor
- * (User Admin, System Admin, Researcher, Visitor).
+ * Small shared helpers for the confirmation dialogs used across the Visitor
+ * app's screens.
  */
 public final class DialogHelper {
 
@@ -22,7 +23,7 @@ public final class DialogHelper {
         void onConfirm();
     }
 
-    /** Shows the "Log out of PlantDex?" confirmation dialog used on every role's account screen. */
+    /** Shows the "Log out of PlantDex?" confirmation dialog used on every account screen. */
     public static void showLogout(Activity activity, String message, String note, OnConfirm onConfirm) {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_logout, null);
 
@@ -54,7 +55,11 @@ public final class DialogHelper {
         dialog.show();
     }
 
-    /** Sends the user back to the login screen and clears the activity stack. */
+    /**
+     * Sends the user back to the login screen and clears the activity stack —
+     * CLEAR_TASK means pressing back from Login can't take them back into the
+     * account they just signed out of.
+     */
     public static void logoutToLogin(Activity activity) {
         android.content.Intent intent = new android.content.Intent(activity, LoginActivity.class);
         intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);

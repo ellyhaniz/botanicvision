@@ -24,9 +24,6 @@
     <string name="category">Category</string>
     <string name="rare">Rare</string>
 
-    <string-array name="account_types">
-        <item>Visitor</item>
-    </string-array>
-
     <string name="feature_coming_soon">Coming soon</string>
+    <string name="no_plant_identified">No plant identified in this photo. Try another photo.</string>
 </resources>

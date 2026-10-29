@@ -1,16 +1,18 @@
 package com.example.plantdex.visitor;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.plantdex.R;
 import com.example.plantdex.common.BottomNavHelper;
 import com.example.plantdex.common.Roles;
+import com.example.plantdex.common.entity.Collectible;
+import com.example.plantdex.visitor.control.CollectibleController;
+
+import java.util.List;
 
 public class VisitorDashboardActivity extends AppCompatActivity {
 
@@ -19,22 +21,45 @@ public class VisitorDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visitor_dashboard);
 
+        // Also wires the header's btnProfile (present directly in this layout).
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
 
-        // Identify Plant, Recent Discovery, and collection inventory are out
-        // of scope for now — the cards stay for layout fidelity but are inert
-        View.OnClickListener comingSoon = v ->
-                Toast.makeText(this, R.string.feature_coming_soon, Toast.LENGTH_SHORT).show();
-
-        findViewById(R.id.btnProfile).setOnClickListener(comingSoon);
+        DiscoveryStore.seedDefaultsIfFirstRun(this);
 
         LinearLayout cardIdentify = findViewById(R.id.cardIdentify);
-        cardIdentify.setOnClickListener(comingSoon);
+        cardIdentify.setOnClickListener(v -> startActivity(new Intent(this, CapturePhotoActivity.class)));
 
+        // Opens whatever was discovered most recently; falls back to the full
+        // inventory if nothing's been discovered yet or the catalog hasn't loaded.
         LinearLayout cardRecentDiscovery = findViewById(R.id.cardRecentDiscovery);
-        cardRecentDiscovery.setOnClickListener(comingSoon);
+        cardRecentDiscovery.setOnClickListener(v -> {
+            String recentId = DiscoveryStore.getMostRecentlyDiscoveredId(this);
+            if (recentId == null) {
+                startActivity(new Intent(this, CollectibleInventoryActivity.class));
+                return;
+            }
+            CollectibleController.loadAll(new CollectibleController.Callback() {
+                @Override
+                public void onSuccess(List<Collectible> collectibles) {
+                    for (Collectible c : collectibles) {
+                        if (c.getId().equals(recentId)) {
+                            startActivity(CollectibleCardActivity.discovered(VisitorDashboardActivity.this, c));
+                            return;
+                        }
+                    }
+                    startActivity(new Intent(VisitorDashboardActivity.this, CollectibleInventoryActivity.class));
+                }
 
-        findViewById(R.id.tvViewMoreProgress).setOnClickListener(comingSoon);
-        findViewById(R.id.tvViewMoreRecent).setOnClickListener(comingSoon);
+                @Override
+                public void onError(String message) {
+                    startActivity(new Intent(VisitorDashboardActivity.this, CollectibleInventoryActivity.class));
+                }
+            });
+        });
+
+        findViewById(R.id.tvViewMoreProgress).setOnClickListener(v ->
+                startActivity(new Intent(this, CollectibleInventoryActivity.class)));
+        findViewById(R.id.tvViewMoreRecent).setOnClickListener(v ->
+                startActivity(new Intent(this, CollectibleInventoryActivity.class)));
     }
 }

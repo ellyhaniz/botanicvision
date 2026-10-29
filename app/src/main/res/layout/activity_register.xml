@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/plantdex_bg"
@@ -34,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Plantdex Account Creation"
+            android:text="Visitor Account Creation"
             android:textColor="@color/plantdex_hint"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -114,22 +115,6 @@
             android:textColorHint="@color/plantdex_hint"
             android:textColor="@color/white"
             android:inputType="textPassword"
-            android:maxLines="1"
-            android:paddingBottom="10dp" />
-
-        <EditText
-            android:id="@+id/etDob"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/bg_input_underline"
-            android:drawableStart="@drawable/ic_calendar"
-            android:drawableTint="@color/white"
-            android:drawablePadding="12dp"
-            android:hint="Enter DOB (DD/MM/YYYY)"
-            android:textColorHint="@color/plantdex_hint"
-            android:textColor="@color/white"
-            android:inputType="date"
             android:maxLines="1"
             android:paddingBottom="10dp" />
 

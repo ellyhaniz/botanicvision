@@ -31,6 +31,8 @@ public class RoleSplashActivity extends AppCompatActivity {
         tvRoleTitle.setText(role.equals(Roles.VISITOR) ? "VISITORS" : role);
 
         final String finalRole = role;
+        // 1.1s is just long enough to read the role name before it moves on —
+        // CLEAR_TASK so this splash itself never ends up in the back stack.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Intent intent = new Intent(RoleSplashActivity.this, Roles.dashboardFor(finalRole));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
