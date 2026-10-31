@@ -4,6 +4,34 @@
     <style name="Base.Theme.PlantDex" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/plantdex_bg</item>
         <item name="android:windowLightStatusBar">false</item>
+        <!-- API 35+ draws edge-to-edge by default, sliding content under the
+             status bar unless every screen handles WindowInsets itself. None
+             of this app's layouts do yet, so opt back out of that until they do. -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+
+        <!-- This app never customized Material3's color scheme, so anything
+             using theme-default styling (rather than one of this app's own
+             @drawable/bg_* backgrounds) was falling back to Material3's own
+             baseline colorPrimary, which is purple (#6750A4) — not a color
+             this app defines anywhere. Pin the whole scheme to the app's
+             green palette so nothing defaults to purple. -->
+        <item name="colorPrimary">@color/plantdex_button</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/plantdex_bg</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+        <item name="colorSecondary">@color/plantdex_bg</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/plantdex_chip_bg</item>
+        <item name="colorOnSecondaryContainer">@color/plantdex_chip_text</item>
+        <item name="colorTertiary">@color/plantdex_button</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <item name="colorSurface">@color/plantdex_card</item>
+        <item name="colorOnSurface">@color/plantdex_text_primary</item>
+        <item name="colorError">@color/plantdex_error_btn</item>
+        <item name="colorOnError">@color/white</item>
+        <!-- Older attribute some platform widgets (e.g. Spinner's dropdown
+             arrow) still key off instead of the Material3 tokens above. -->
+        <item name="colorAccent">@color/plantdex_button</item>
     </style>
 
     <style name="Theme.PlantDex" parent="Base.Theme.PlantDex" />

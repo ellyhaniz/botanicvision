@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:layout_margin="4dp"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_card"
+    android:padding="12dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <FrameLayout
+        android:id="@+id/tileIconFrame"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:background="@drawable/bg_icon_tile">
+
+        <ImageView
+            android:id="@+id/tileIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_leaf"
+            android:contentDescription="Collectible" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="Tembusu Tree"
+        android:textColor="@color/plantdex_text_primary"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tileRarity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Rare"
+        android:textColor="@color/plantdex_rare_text"
+        android:textSize="11sp" />
+</LinearLayout>

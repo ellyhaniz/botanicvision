@@ -1,7 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PlantDex" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Same reasoning as values/themes.xml: pin Material3's color scheme
+             to the app's green palette so nothing falls back to its default
+             purple in dark mode either. This app's own screens are already
+             dark-green-styled regardless of system day/night, so night mode
+             uses the same colors as light mode here. -->
+        <item name="colorPrimary">@color/plantdex_button</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/plantdex_bg</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+        <item name="colorSecondary">@color/plantdex_bg</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/plantdex_chip_bg</item>
+        <item name="colorOnSecondaryContainer">@color/plantdex_chip_text</item>
+        <item name="colorTertiary">@color/plantdex_button</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <item name="colorSurface">@color/plantdex_card</item>
+        <item name="colorOnSurface">@color/plantdex_text_primary</item>
+        <item name="colorError">@color/plantdex_error_btn</item>
+        <item name="colorOnError">@color/white</item>
+        <item name="colorAccent">@color/plantdex_button</item>
     </style>
 </resources>

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <application
         android:allowBackup="true"
@@ -12,10 +17,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.PlantDex">
 
+
+
         <activity
-            android:name=".common.LoginActivity"
+            android:name=".common.boundary.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
@@ -25,20 +33,42 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".common.RegisterActivity" android:exported="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".common.ResetPasswordActivity" android:exported="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".common.RoleSplashActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".common.boundary.RegisterActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".common.boundary.ResetPasswordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".common.RoleSplashActivity" android:screenOrientation="portrait" />
+
+        <!-- Shared account -->
+        <activity android:name=".common.boundary.MyAccountActivity" android:screenOrientation="portrait" />
+        <activity android:name=".common.boundary.EditMyAccountActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
 
         <!-- Visitor -->
-        <activity android:name=".visitor.VisitorDashboardActivity" android:exported="true" android:screenOrientation="portrait" />
-        <activity android:name=".visitor.CollectibleCardUnlockedActivity" android:exported="true" android:screenOrientation="portrait" />
-        <activity android:name=".visitor.CollectibleCardLockedActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.VisitorDashboardActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.CapturePhotoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.ConfirmPhotoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.IdentificationResultActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.CollectibleInventoryActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.SearchInventoryActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.CollectibleCardActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.CollectibleCardUnlockedActivity" android:screenOrientation="portrait" />
+        <activity android:name=".visitor.CollectibleCardLockedActivity" android:screenOrientation="portrait" />
 
         <!-- Researcher -->
-        <activity android:name=".researcher.ResearcherDashboardActivity" android:exported="true" android:screenOrientation="portrait" />
-        <activity android:name=".researcher.RecordsListActivity" android:exported="true" android:screenOrientation="portrait" />
-        <activity android:name=".researcher.RecordDetailActivity" android:exported="true" android:screenOrientation="portrait" />
-        <activity android:name=".researcher.CreateRecordActivity" android:exported="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".researcher.ResearcherDashboardActivity" android:screenOrientation="portrait" />
+        <activity android:name=".researcher.RecordsListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".researcher.RecordDetailActivity" android:screenOrientation="portrait" />
+        <activity android:name=".researcher.CreateRecordActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+
+        <!-- Provider -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>
