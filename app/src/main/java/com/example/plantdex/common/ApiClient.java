@@ -22,18 +22,18 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 
 /**
- * Talks to the Flask API (see /backend) over plain HTTP. No third-party
+ * Talks to the Django portal's JSON API (portal/portal/api.py) over plain HTTP. No third-party
  * networking library — just HttpURLConnection and org.json, both already
  * part of the Android SDK.
  */
 public final class ApiClient {
 
-    // Tunneled straight to this Mac's port 5000 via `adb reverse tcp:5000 tcp:5000`
-    // (bypasses the emulator's virtual NIC, which was timing out unreliably).
-    // Re-run that command after every emulator restart — or, once you're on a
-    // physical device, replace this with your computer's LAN IP address
-    // (see backend/README.md).
-    private static final String BASE_URL = "http://localhost:5000";
+    // The Django portal (portal/, `python manage.py runserver`), tunneled to the
+    // device via `adb reverse tcp:8000 tcp:8000`. Re-run that command after every
+    // emulator restart or USB reconnect — or, to go over Wi-Fi instead, replace
+    // this with your computer's LAN IP and run the portal on 0.0.0.0:8000
+    // (see portal/README.md, "Android app").
+    private static final String BASE_URL = "http://localhost:8000";
 
     private static final int TIMEOUT_MS = 20000;
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
@@ -228,7 +228,7 @@ public final class ApiClient {
 
     // Reads the response body regardless of status code, then routes it to
     // onSuccess/onError based on whether the server considered the request
-    // a success (2xx) or not. The Flask side always sends a "message" field
+    // a success (2xx) or not. The Django API always sends a "message" field
     // on errors, so that's what we surface to the user.
     private static void handleResponse(HttpURLConnection conn, Callback callback) throws IOException {
         int code = conn.getResponseCode();

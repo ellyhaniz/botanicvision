@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from . import views, account_views, profile_views, error_log_views
+from . import api, views, account_views, profile_views, error_log_views
 from .records import architecture, botanical
 
 urlpatterns = [
@@ -38,6 +38,9 @@ urlpatterns = [
     # Researcher records (botanical + architecture)
     *botanical.urls,
     *architecture.urls,
+
+    # JSON API for the Android app
+    *api.urls,
 
     # keep this LAST: placeholder page for sections that have no real page yet
     path("section/<slug:slug>/", views.section, name="section"),
