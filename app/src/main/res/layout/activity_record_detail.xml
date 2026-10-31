@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/plantdex_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/researcher_id" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/plantdex_management" android:textColor="@color/plantdex_hint" android:textSize="12sp"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnProfile"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_icon_tile"
+            android:src="@drawable/ic_person"
+            android:scaleType="centerInside"
+            android:padding="8dp"
+            android:contentDescription="@string/researcher_id"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:text="Record Detail"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/bg_panel_top">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_card">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="@drawable/bg_thumb">
+                        <ImageView
+                            android:id="@+id/imgThumb"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_eco"
+                            app:tint="@color/white"
+                            android:contentDescription="@string/category"/>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/tvName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tembusu Tree"
+                                    android:textColor="@color/plantdex_text_primary"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"/>
+                                <TextView
+                                    android:id="@+id/tvRecordNumber"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Record #0231"
+                                    android:textColor="@color/plantdex_text_muted"
+                                    android:textSize="12sp"/>
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_pill"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                android:text="Logged"
+                                android:textColor="@color/plantdex_success_text"
+                                android:textSize="12sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="14dp"
+                            android:background="@color/plantdex_divider"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/category" android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                            <TextView android:id="@+id/tvCategory" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/flora" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Logged" android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                            <TextView android:id="@+id/tvLoggedDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="15 Sep 2026, 10:22:41" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <!-- Botanical fields -->
+                        <LinearLayout
+                            android:id="@+id/groupBotanical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal">
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Scientific name" android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                                <TextView android:id="@+id/tvScientificName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cyrtophyllum fragrans" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" android:textStyle="italic"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal">
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Family" android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                                <TextView android:id="@+id/tvFamily" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gentianaceae" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" android:textStyle="bold"/>
+                            </LinearLayout>
+
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Identification Features" android:textColor="@color/plantdex_label" android:textSize="13sp" android:textStyle="bold"/>
+                            <TextView android:id="@+id/tvFeatures" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Dark fissured bark, small cream flowers, spreading crown." android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Fun Fact" android:textColor="@color/plantdex_label" android:textSize="13sp" android:textStyle="bold"/>
+                            <TextView android:id="@+id/tvFunFact" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Appears on the reverse of the Singapore five-dollar note." android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                        </LinearLayout>
+
+                        <!-- Architectural fields -->
+                        <LinearLayout
+                            android:id="@+id/groupArchitectural"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal">
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Location" android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                                <TextView android:id="@+id/tvLocation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bandstand Hill, Tanglin Core" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" android:textStyle="bold"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal">
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Style" android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                                <TextView android:id="@+id/tvStyle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Victorian" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" android:textStyle="bold"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal">
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Constructed" android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                                <TextView android:id="@+id/tvConstructed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1930" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" android:textStyle="bold"/>
+                            </LinearLayout>
+
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Description" android:textColor="@color/plantdex_label" android:textSize="13sp" android:textStyle="bold"/>
+                            <TextView android:id="@+id/tvDescription" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="An octagonal cast iron bandstand set on a low rise, originally used for evening band performances." android:textColor="@color/plantdex_text_muted" android:textSize="13sp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/navContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

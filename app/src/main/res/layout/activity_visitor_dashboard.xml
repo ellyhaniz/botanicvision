@@ -395,6 +395,65 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Undiscovered example card -->
+            <LinearLayout
+                android:id="@+id/cardUndiscovered"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_card"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_icon_tile"
+                    android:src="@drawable/ic_lock"
+                    android:scaleType="centerInside"
+                    android:padding="8dp"
+                    android:contentDescription="@string/undiscovered" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/undiscovered_title"
+                        android:textColor="@color/plantdex_text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Collectible #0061"
+                        android:textColor="@color/plantdex_text_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill_common"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/undiscovered"
+                    android:textColor="@color/plantdex_common_text"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

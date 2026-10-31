@@ -9,10 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.plantdex.R;
-import com.example.plantdex.visitor.VisitorDashboardActivity;
 
 /**
- * Inflates and wires the bottom navigation bar for the Visitor screens.
+ * Inflates and wires the bottom navigation bar shared across roles.
  * Profile and Camera are shown for layout fidelity but are not wired to
  * a screen yet — those flows are out of scope for now.
  */
@@ -32,7 +31,7 @@ public final class BottomNavHelper {
         ImageButton navLogout = navView.findViewById(R.id.navLogout);
 
         navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, VisitorDashboardActivity.class);
+            Intent intent = new Intent(activity, Roles.dashboardFor(role));
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             activity.startActivity(intent);
         });

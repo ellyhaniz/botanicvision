@@ -28,7 +28,15 @@ public class RoleSplashActivity extends AppCompatActivity {
         if (role == null) role = Roles.VISITOR;
 
         TextView tvRoleTitle = findViewById(R.id.tvRoleTitle);
-        tvRoleTitle.setText(role.equals(Roles.VISITOR) ? "VISITORS" : role);
+        String title;
+        if (role.equals(Roles.VISITOR)) {
+            title = "VISITORS";
+        } else if (role.equals(Roles.RESEARCHER)) {
+            title = "RESEARCHERS";
+        } else {
+            title = role;
+        }
+        tvRoleTitle.setText(title);
 
         final String finalRole = role;
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
