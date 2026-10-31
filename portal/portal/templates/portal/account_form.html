@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block title %}Edit {{ target.username }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'account_detail' target.pk %}">← Back to account</a>
+<h1>Edit account</h1>
+<p class="muted">Username <strong>{{ target.username }}</strong> cannot be changed.</p>
+
+<form method="post" class="card form-card">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="field">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    {% if field.field.disabled %}<div class="hint">You can't change your own profile type.</div>{% endif %}
+    {% if field.errors %}<div class="field-error">{{ field.errors.0 }}</div>{% endif %}
+  </div>
+  {% endfor %}
+  <div class="actions">
+    <button class="btn-sm">Save changes</button>
+    <a class="btn-sm btn-light" href="{% url 'account_detail' target.pk %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

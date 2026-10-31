@@ -1,0 +1,21 @@
+{% extends "portal/base.html" %}
+{% block title %}Confirm · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'account_detail' target.pk %}">← Back to account</a>
+<h1>{% if target.is_active %}Suspend{% else %}Reactivate{% endif %} account?</h1>
+
+<form method="post" class="card form-card">
+  {% csrf_token %}
+  {% if target.is_active %}
+    <p><strong>{{ target.username }}</strong> will no longer be able to log in. Their information is kept, and you can reactivate the account later.</p>
+  {% else %}
+    <p><strong>{{ target.username }}</strong> will be able to log in again.</p>
+  {% endif %}
+  <div class="actions">
+    <button class="btn-sm {% if target.is_active %}btn-danger{% endif %}">
+      Yes, {% if target.is_active %}suspend{% else %}reactivate{% endif %}
+    </button>
+    <a class="btn-sm btn-light" href="{% url 'account_detail' target.pk %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

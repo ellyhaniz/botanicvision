@@ -1,0 +1,88 @@
+{% extends "portal/base.html" %}
+{% block title %}{% if record %}Edit{% else %}New{% endif %} {{ cfg.singular }} · PlantDex{% endblock %}
+{% block content %}
+{% if record %}
+<a class="muted" href="{% url cfg.url_detail record.pk %}">← Back to record</a>
+<h1>Edit {{ cfg.singular }}</h1>
+{% else %}
+<a class="muted" href="{% url cfg.url_list %}">← Back to {{ cfg.title|lower }}</a>
+<h1>New {{ cfg.singular }}</h1>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" class="card form-card wide" id="record-form" novalidate>
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="error">{{ form.non_field_errors.0 }}</div>
+  {% endif %}
+
+  <div class="msg msg-warning" id="dup-warning" hidden>
+    A {{ cfg.singular }} with this {{ cfg.duplicate_label }} already exists:
+    <a href="#" target="_blank" rel="noopener"></a>.
+    You can still save, but check you are not creating a duplicate.
+  </div>
+
+  {% for field in form.visible_fields %}
+  <div class="field">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    {% if field.name == "image" %}
+      {% if record and record.image %}<img class="detail-img small" id="current-image" src="{{ record.image.url }}" alt="Current image">{% endif %}
+      <img class="detail-img small" id="image-preview" alt="Preview of the chosen image" hidden>
+    {% endif %}
+    {% if field.help_text %}<div class="hint">{{ field.help_text }}</div>{% endif %}
+    {% if field.errors %}<div class="field-error">{{ field.errors.0 }}</div>{% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn-sm">{% if record %}Save changes{% else %}Create {{ cfg.singular }}{% endif %}</button>
+    <a class="btn-sm btn-light" href="{% if record %}{% url cfg.url_detail record.pk %}{% else %}{% url cfg.url_list %}{% endif %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var form = document.getElementById("record-form");
+  var input = document.getElementById("id_{{ cfg.duplicate_field }}");
+  var box = document.getElementById("dup-warning");
+  var link = box.querySelector("a");
+  var found = false, timer = null;
+
+  // Duplicate warning: ask the server whether this {{ cfg.duplicate_label }} is already used.
+  function check() {
+    var value = input.value.trim();
+    if (!value) { box.hidden = true; found = false; return; }
+    var url = "{% url cfg.url_check %}?value=" + encodeURIComponent(value){% if record %} + "&exclude={{ record.pk }}"{% endif %};
+    fetch(url, { credentials: "same-origin" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        found = !!d.duplicate;
+        if (found) { link.textContent = d.name; link.href = d.url; }
+        box.hidden = !found;
+      })
+      .catch(function () { /* the warning is only a convenience */ });
+  }
+  input.addEventListener("input", function () { clearTimeout(timer); timer = setTimeout(check, 400); });
+  input.addEventListener("blur", check);
+  form.addEventListener("submit", function (e) {
+    if (found && !confirm("A {{ cfg.singular }} with this {{ cfg.duplicate_label }} already exists. Save anyway?")) {
+      e.preventDefault();
+    }
+  });
+  check();
+
+  // Image preview of the file just chosen.
+  var file = document.getElementById("id_image");
+  var preview = document.getElementById("image-preview");
+  file.addEventListener("change", function () {
+    var f = file.files && file.files[0];
+    if (!f) { preview.hidden = true; return; }
+    preview.src = URL.createObjectURL(f);
+    preview.hidden = false;
+  });
+})();
+</script>
+{% endblock %}

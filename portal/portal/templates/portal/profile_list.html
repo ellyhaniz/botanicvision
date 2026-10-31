@@ -1,0 +1,37 @@
+{% extends "portal/base.html" %}
+{% block title %}Profile Types · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'dashboard' %}">← Back to dashboard</a>
+<h1>Profile Type Management</h1>
+<p class="muted">Role definitions and the sections each one can open.</p>
+
+<form method="get" class="card filters">
+  <div style="grid-column: span 2">
+    <label>Search</label>
+    <input type="text" name="q" value="{{ q }}" placeholder="Profile type name or description">
+  </div>
+  <div class="filter-btns">
+    <button class="btn-sm">Search</button>
+    <a class="btn-sm btn-light" href="{% url 'profile_types' %}">Clear</a>
+  </div>
+</form>
+
+<div class="card table-wrap">
+  <table>
+    <thead><tr><th>Profile type</th><th>Description</th><th>Permissions</th><th>Users</th><th></th></tr></thead>
+    <tbody>
+      {% for p in items %}
+      <tr>
+        <td><strong>{{ p.group.name }}</strong></td>
+        <td class="wrap">{{ p.description|default:"—" }}</td>
+        <td>{{ p.perm_count }}</td>
+        <td>{{ p.user_count }}</td>
+        <td><a class="link" href="{% url 'profile_detail' p.pk %}">View →</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="empty">{% if q %}No results found.{% else %}No user profile types found.{% endif %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

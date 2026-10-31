@@ -1,0 +1,19 @@
+# Python / Django
+venv/
+.venv/
+__pycache__/
+*.pyc
+db.sqlite3
+*.log
+
+# Secrets and local config
+.env
+
+# Uploaded files (later: botanical/architecture images)
+media/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

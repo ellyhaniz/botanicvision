@@ -1,0 +1,32 @@
+{% extends "portal/base.html" %}
+{% block title %}Edit {{ pt.group.name }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'profile_detail' pt.pk %}">← Back to profile type</a>
+<h1>Edit profile type</h1>
+<p class="muted">The name <strong>{{ pt.group.name }}</strong> cannot be changed.</p>
+
+<form method="post" class="card form-card">
+  {% csrf_token %}
+  <div class="field">
+    <label for="{{ form.description.id_for_label }}">Description</label>
+    {{ form.description }}
+    {% if form.description.errors %}<div class="field-error">{{ form.description.errors.0 }}</div>{% endif %}
+  </div>
+
+  <div class="field">
+    <label>Permissions</label>
+    <div class="checks">
+      {% for cb in form.permissions %}
+        <label class="check">{{ cb.tag }} <span>{{ cb.choice_label }}</span></label>
+      {% endfor %}
+    </div>
+    {% if form.permissions.errors %}<div class="field-error">{{ form.permissions.errors.0 }}</div>{% endif %}
+    <div class="hint">Changes apply to everyone with this profile type on their next click.</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-sm">Save changes</button>
+    <a class="btn-sm btn-light" href="{% url 'profile_detail' pt.pk %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

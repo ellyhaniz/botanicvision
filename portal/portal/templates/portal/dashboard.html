@@ -1,0 +1,19 @@
+{% extends "portal/base.html" %}
+{% block title %}Dashboard · PlantDex{% endblock %}
+{% block content %}
+<h1>Welcome, {{ user.first_name|default:user.get_username }}</h1>
+<p class="muted">Signed in as <strong>{{ role|default:"(no role assigned)" }}</strong></p>
+
+{% if not role %}
+  <div class="error">Your account has no role yet. Ask a User Admin to assign one.</div>
+{% endif %}
+
+<div class="grid">
+  {% for c in cards %}
+  <a class="card tile" href="{% url 'section' c.slug %}">
+    <h2>{{ c.title }}</h2>
+    <p>{{ c.desc }}</p>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

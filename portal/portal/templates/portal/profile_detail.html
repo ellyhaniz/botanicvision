@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ pt.group.name }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'profile_types' %}">← Back to profile types</a>
+<h1>{{ pt.group.name }}</h1>
+
+<div class="card form-card">
+  <dl class="details">
+    <dt>Name</dt><dd>{{ pt.group.name }}</dd>
+    <dt>Description</dt><dd>{{ pt.description|default:"—" }}</dd>
+    <dt>Users</dt><dd>{{ user_count }}</dd>
+    <dt>Last updated</dt><dd>{{ pt.updated_at|date:"d M Y, H:i" }}</dd>
+    <dt>Permissions</dt>
+    <dd>
+      {% for f in perms %}<span class="chip">{{ f.title }}</span>
+      {% empty %}<span class="muted">No permissions assigned.</span>{% endfor %}
+    </dd>
+  </dl>
+  <div class="actions">
+    <a class="btn-sm" href="{% url 'profile_edit' pt.pk %}">Edit profile type</a>
+  </div>
+</div>
+{% endblock %}
