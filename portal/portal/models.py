@@ -1,7 +1,10 @@
 from django.contrib.auth.models import Group
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
+
+from .storage import database_storage
 
 
 class AuditLog(models.Model):
@@ -191,3 +194,117 @@ class ArchitectureRecord(RecordBase):
 
     def __str__(self):
         return self.name
+
+
+# ---------------------------------------------------------------------------
+# Discovery collectibles (SA-04 .. SA-08)
+# ---------------------------------------------------------------------------
+class StoredFile(models.Model):
+    """A file kept in the database. See portal/storage.py for why."""
+    name = models.CharField(max_length=255, unique=True)   # e.g. collectibles/2026/10/tembusu.png
+    content = models.BinaryField()
+    content_type = models.CharField(max_length=100, blank=True)
+    size = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class CollectibleCategory(models.Model):
+    """Groups collectibles for searching and filtering, e.g. Flora, Architecture."""
+    name = models.CharField(max_length=60, unique=True)
+    description = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name_plural = "collectible categories"
+
+    def __str__(self):
+        return self.name
+
+
+class Collectible(models.Model):
+    """A discovery card a visitor unlocks by identifying one verified plant or structure."""
+    COMMON, UNCOMMON, RARE, HIDDEN = "COMMON", "UNCOMMON", "RARE", "HIDDEN"
+    RARITIES = [(COMMON, "Common"), (UNCOMMON, "Uncommon"), (RARE, "Rare"), (HIDDEN, "Hidden")]
+
+    DRAFT, PUBLISHED = "DRAFT", "PUBLISHED"
+    STATUSES = [(DRAFT, "Draft"), (PUBLISHED, "Published")]
+
+    name = models.CharField(max_length=100, db_index=True)
+    description = models.TextField()
+    image = models.ImageField(upload_to="collectibles/%Y/%m/", storage=database_storage)
+    category = models.ForeignKey(CollectibleCategory, on_delete=models.PROTECT,
+                                 related_name="collectibles")
+    rarity = models.CharField(max_length=10, choices=RARITIES, default=COMMON, db_index=True)
+    status = models.CharField(max_length=10, choices=STATUSES, default=PUBLISHED, db_index=True)
+
+    # Exactly ONE of these is set (enforced below). OneToOne means a record can have at
+    # most one collectible, which is the "duplicate collectible" rule of SA-04 / SA-06.
+    # PROTECT stops a linked record from being hard-deleted by accident.
+    botanical_record = models.OneToOneField(
+        BotanicalRecord, null=True, blank=True, on_delete=models.PROTECT, related_name="collectible")
+    architecture_record = models.OneToOneField(
+        ArchitectureRecord, null=True, blank=True, on_delete=models.PROTECT, related_name="collectible")
+
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
+                                   on_delete=models.SET_NULL, related_name="+")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["name"]
+        constraints = [
+            models.CheckConstraint(
+                condition=(Q(botanical_record__isnull=False, architecture_record__isnull=True)
+                           | Q(botanical_record__isnull=True, architecture_record__isnull=False)),
+                name="collectible_links_exactly_one_record"),
+        ]
+
+    def __str__(self):
+        return self.name
+
+    # --- the linked record, whichever kind it is -------------------------
+    @property
+    def linked_record(self):
+        return self.botanical_record or self.architecture_record
+
+    @property
+    def linked_kind(self):
+        return "Botanical" if self.botanical_record_id else "Architecture"
+
+    @property
+    def linked_name(self):
+        record = self.linked_record
+        if record is None:
+            return ""
+        return record.common_name if self.botanical_record_id else record.name
+
+    @property
+    def linked_available(self):
+        """False if the linked record was deleted or is no longer verified (Published)."""
+        record = self.linked_record
+        return record is not None and not record.is_deleted and record.status == "PUBLISHED"
+
+
+class CollectibleUnlock(models.Model):
+    """A visitor unlocked a collectible. Written by the mobile app's API, read here.
+
+    It is what makes a collectible "in use": one with unlocks cannot be deleted (SA-07).
+    Visitor accounts live with the mobile app, so the visitor is stored as text.
+    """
+    collectible = models.ForeignKey(Collectible, on_delete=models.PROTECT, related_name="unlocks")
+    visitor_username = models.CharField(max_length=150, db_index=True)
+    unlocked_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ["-unlocked_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["collectible", "visitor_username"],
+                                    name="one_unlock_per_visitor_per_collectible"),
+        ]
+
+    def __str__(self):
+        return f"{self.visitor_username} unlocked {self.collectible_id}"
+

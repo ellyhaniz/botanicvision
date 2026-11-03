@@ -212,3 +212,15 @@ a.btn { display:block; text-align:center; text-decoration:none; }
 .msg a { color:inherit; font-weight:700; }
 .pill-draft { background:#fff2d6; color:#8a5a00; }
 [hidden] { display:none !important; }
+
+/* ---------- Collectibles ---------- */
+.pill-rarity-COMMON   { background:#e8f0eb; color:#1b4d32; }
+.pill-rarity-UNCOMMON { background:#dff0f7; color:#1b5a74; }
+.pill-rarity-RARE     { background:#ece3f7; color:#5a2e8a; }
+.pill-rarity-HIDDEN   { background:#2b2f2d; color:#f0e6c8; }
+.inline-msg { margin:.5rem 0 0; font-size:.85rem; }
+.table-compact th, .table-compact td { padding:.7rem .7rem; }
+.table-compact td.wrap { white-space:normal; min-width:0; color:inherit; }
+.table-compact td.name-cell { max-width:200px; }
+.table-compact td:last-child { white-space:nowrap; }
+

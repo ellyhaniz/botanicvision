@@ -1,0 +1,95 @@
+{% extends "portal/base.html" %}
+{% block title %}Collectibles · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'dashboard' %}">← Back to dashboard</a>
+<div class="page-head">
+  <div>
+    <h1>Collectible Management</h1>
+    <p class="muted">Discovery cards that visitors unlock by identifying a verified plant or structure.</p>
+  </div>
+  <a class="btn-sm" href="{% url 'collectible_new' %}">+ New collectible</a>
+</div>
+
+<form method="get" class="card filters">
+  <div style="grid-column: span 2">
+    <label>Search</label>
+    <input type="text" name="q" value="{{ q }}" placeholder="Name, description or linked record">
+  </div>
+  <div>
+    <label>Category</label>
+    <select name="category">
+      <option value="">All</option>
+      {% for c in categories %}<option value="{{ c.pk }}" {% if category == c.pk|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Rarity</label>
+    <select name="rarity">
+      <option value="">All</option>
+      {% for value, label in rarities %}<option value="{{ value }}" {% if rarity == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Status</label>
+    <select name="status">
+      <option value="">All</option>
+      {% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Linked to</label>
+    <select name="kind">
+      <option value="">Any record</option>
+      <option value="botanical" {% if kind == "botanical" %}selected{% endif %}>Botanical record</option>
+      <option value="architecture" {% if kind == "architecture" %}selected{% endif %}>Architecture record</option>
+    </select>
+  </div>
+  <div class="filter-btns">
+    <button class="btn-sm">Search</button>
+    <a class="btn-sm btn-light" href="{% url 'collectible_list' %}">Clear</a>
+  </div>
+</form>
+
+<p class="muted count">{{ page.paginator.count }} collectible{{ page.paginator.count|pluralize }} found</p>
+
+<div class="card table-wrap">
+  <table class="table-compact">
+    <thead>
+      <tr><th></th><th>Name</th><th>Category</th><th>Rarity</th><th>Linked record</th><th>Status</th><th>Unlocks</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for c in page %}
+      <tr>
+        <td><img class="thumb" src="{{ c.image.url }}" alt=""></td>
+        <td class="wrap name-cell"><strong>{{ c.name }}</strong></td>
+        <td>{{ c.category.name }}</td>
+        <td><span class="pill pill-rarity-{{ c.rarity }}">{{ c.get_rarity_display }}</span></td>
+        <td class="wrap">
+          {{ c.linked_name }} <span class="muted">· {{ c.linked_kind }}</span>
+          {% if not c.linked_available %}<span class="pill pill-suspended" title="The linked record was deleted or is no longer Published">unavailable</span>{% endif %}
+        </td>
+        <td>{% if c.status == "PUBLISHED" %}<span class="pill pill-active">Published</span>{% else %}<span class="pill pill-draft">Draft</span>{% endif %}</td>
+        <td>{{ c.unlock_count }}</td>
+        <td>
+          <div class="row-actions">
+            <a class="link" href="{% url 'collectible_detail' c.pk %}">View</a>
+            <a class="link" href="{% url 'collectible_edit' c.pk %}">Edit</a>
+            <a class="link link-danger" href="{% url 'collectible_delete' c.pk %}">Delete</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="empty">{% if filtered %}No matching collectibles were found.{% else %}No collectibles available yet.{% endif %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page.has_other_pages %}
+<div class="pager">
+  {% if page.has_previous %}<a href="?{{ querystring }}&page={{ page.previous_page_number }}">← Prev</a>{% endif %}
+  <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a href="?{{ querystring }}&page={{ page.next_page_number }}">Next →</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

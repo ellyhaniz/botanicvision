@@ -87,12 +87,14 @@ python manage.py migrate
 python manage.py seed_roles
 python manage.py seed_demo
 python manage.py seed_records
+python manage.py seed_collectibles
 ```
 
 | Command | What it does |
 |---|---|
 | `migrate` | Creates all the tables |
 | `seed_roles` | Creates the three roles, their permissions, and 3 demo logins |
+| `seed_collectibles` | *(optional, run after `seed_records`)* A sample collectible for every Published record, plus a few visitor unlocks so some are "in use". `python manage.py seed_collectibles --clear` removes them. To remove the sample records afterwards, clear the collectibles first, then `seed_records --clear` |
 | `seed_records` | *(optional)* 15 sample plants and 15 sample structures, with placeholder pictures. All values except the real plant names are random, so treat them as test data. `python manage.py seed_records --clear` removes them again |
 | `seed_demo` | *(optional)* Adds 21 test accounts: 12 researchers, 8 visitors, 1 suspended staff. Handy for trying search, paging and suspend |
 
@@ -187,6 +189,7 @@ python manage.py migrate
 python manage.py seed_roles
 python manage.py seed_demo
 python manage.py seed_records
+python manage.py seed_collectibles
 ```
 
 ---
@@ -301,21 +304,41 @@ the browser page) and ask in the team chat.
 
 ---
 
-## 11. Images and a shared database (read this if the team shares one SQL Server / Azure SQL)
+## 11. Pictures and a shared database (read this if the team shares one SQL Server / Azure SQL)
 
-Botanical and architecture records store **only the file path** of their picture in the
-database. The picture itself is saved in the `media/` folder on the computer that uploaded
-it. If several people share one database, they all see the same records, but **only the
-person who uploaded a picture has the file**: everyone else sees a broken image.
+There are two kinds of pictures in the portal:
 
-For now, treat pictures as per-machine test data (the `seed_records` placeholders are fine
-for this). Before a shared demo, the team must pick one fix:
+| Pictures of | Where the file is | Shared on one database? |
+|---|---|---|
+| **Collectibles** | **Inside the database** (table `portal_storedfile`) | **Yes**: everyone sees them |
+| Botanical and architecture records | In the `media/` folder on the computer that uploaded them | No: only the uploader's computer has the file, everyone else sees a broken image |
 
-- store images in **Azure Blob Storage** (needs `django-storages` and a small settings change), or
-- copy the same `media/` folder to everyone, or
-- agree that only one person's machine is used for the demo.
+For record pictures, treat them as per-machine test data for now. Moving them into the database
+is a one-line change per field plus a migration (see README.md, "Pictures"). Ask before doing it,
+because it changes the shared database.
 
-Migrations for a shared database: **one person** runs `python manage.py migrate`. After
-merging the records feature, that applies `0004_architecturerecord_botanicalrecord` on top
-of `0003_collectibleerrorlog`. Nothing existing is changed.
+**Database size.** Pictures in the database count towards your Azure SQL storage, so keep them
+small (the portal rejects files over 5 MB).
 
+### Applying new migrations to the shared database
+
+**One person** runs `python manage.py migrate` (or `.\start_portal.ps1 -Migrate`) against the shared
+database, and only after the pull request that adds the migrations is merged. Preview it first
+(this changes nothing):
+
+```powershell
+python manage.py migrate --plan
+```
+
+The chain is:
+
+```
+0001_initial → 0002_feature_profiletype → 0003_collectibleerrorlog
+             → 0004_architecturerecord_botanicalrecord      (Researcher records)
+             → 0005_collectibles                            (4 new tables)
+             → 0006_default_collectible_categories          (adds Flora and Architecture)
+```
+
+Nothing existing is changed or deleted by these migrations. Migrations `0005` and `0006` can be
+reversed (`python manage.py migrate portal 0004`), which removes the collectible tables and
+**their data**, so only do that on purpose.

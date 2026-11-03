@@ -1,0 +1,19 @@
+{% extends "portal/base.html" %}
+{% block title %}Delete {{ collectible.name }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'collectible_detail' collectible.pk %}">← Back to collectible</a>
+<h1>Delete collectible?</h1>
+
+<form method="post" class="card form-card">
+  {% csrf_token %}
+  <img class="detail-img small" src="{{ collectible.image.url }}" alt="">
+  <p><strong>{{ collectible.name }}</strong> will be permanently removed, together with its picture.
+     Nobody has unlocked it yet, so no visitor progress is affected.</p>
+  <p class="muted">The linked {{ collectible.linked_kind|lower }} record <strong>{{ collectible.linked_name }}</strong>
+     is not deleted and can be given a new collectible. The deletion is written to the audit log.</p>
+  <div class="actions">
+    <button class="btn-sm btn-danger">Yes, delete</button>
+    <a class="btn-sm btn-light" href="{% url 'collectible_detail' collectible.pk %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

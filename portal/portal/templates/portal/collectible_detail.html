@@ -1,0 +1,37 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ collectible.name }} · PlantDex{% endblock %}
+{% block content %}
+<a class="muted" href="{% url 'collectible_list' %}">← Back to collectibles</a>
+<h1>{{ collectible.name }}</h1>
+
+<div class="card form-card wide">
+  <img class="detail-img" src="{{ collectible.image.url }}" alt="{{ collectible.name }}">
+  <dl class="details">
+    <dt>Name</dt><dd>{{ collectible.name }}</dd>
+    <dt>Description</dt><dd class="prewrap">{{ collectible.description }}</dd>
+    <dt>Category</dt><dd>{{ collectible.category.name }}</dd>
+    <dt>Rarity</dt><dd><span class="pill pill-rarity-{{ collectible.rarity }}">{{ collectible.get_rarity_display }}</span></dd>
+    <dt>Status</dt>
+    <dd>{% if collectible.status == "PUBLISHED" %}<span class="pill pill-active">Published</span>{% else %}<span class="pill pill-draft">Draft</span>{% endif %}</dd>
+    <dt>Linked record</dt>
+    <dd>
+      {{ collectible.linked_name }} <span class="muted">· {{ collectible.linked_kind }} record</span>
+      {% if not collectible.linked_available %}
+        <div class="msg msg-warning inline-msg">The linked record is unavailable: it was deleted or is no longer Published. Visitors cannot unlock this card until you link a verified record.</div>
+      {% endif %}
+    </dd>
+    <dt>Unlocked by</dt>
+    <dd>{{ unlock_count }} visitor{{ unlock_count|pluralize }}
+      {% if recent_unlocks %}<div class="hint">Latest: {% for u in recent_unlocks %}{{ u.visitor_username }} ({{ u.unlocked_at|date:"d M Y" }}){% if not forloop.last %}, {% endif %}{% endfor %}</div>{% endif %}
+    </dd>
+    <dt>Created</dt>
+    <dd>{{ collectible.created_at|date:"d M Y, H:i" }}{% if collectible.created_by %} by {{ collectible.created_by.get_username }}{% endif %}</dd>
+    <dt>Last updated</dt><dd>{{ collectible.updated_at|date:"d M Y, H:i" }}</dd>
+  </dl>
+  <div class="actions">
+    <a class="btn-sm" href="{% url 'collectible_edit' collectible.pk %}">Edit</a>
+    <a class="btn-sm btn-danger" href="{% url 'collectible_delete' collectible.pk %}">Delete</a>
+    <a class="btn-sm btn-light" href="{% url 'collectible_list' %}">Back to list</a>
+  </div>
+</div>
+{% endblock %}
