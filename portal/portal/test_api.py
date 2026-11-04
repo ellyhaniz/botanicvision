@@ -113,11 +113,47 @@ class IdentifyTests(ApiTestCase):
         self.assertEqual(self.client.post("/api/identify").status_code, 400)
 
     @mock.patch.dict("os.environ", {"PLANTNET_API_KEY": "test-key"})
+    @mock.patch("portal.api.classifier.available", return_value=False)
     @mock.patch("portal.api.requests.post")
-    def test_forwards_plantnet_result(self, fake_post):
+    def test_forwards_plantnet_result(self, fake_post, _no_model):
         fake_post.return_value = mock.Mock(status_code=200, ok=True,
                                            json=lambda: {"results": [{"species": {"scientificNameWithoutAuthor": "Samanea saman"}}]})
         photo = SimpleUploadedFile("plant.jpg", b"jpegbytes", content_type="image/jpeg")
         r = self.client.post("/api/identify", {"image": photo})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.json()["results"][0]["species"]["scientificNameWithoutAuthor"], "Samanea saman")
+        self.assertEqual(r.json()["source"], "plantnet")
+
+    @mock.patch("portal.api.classifier.available", return_value=True)
+    @mock.patch("portal.api.classifier.classify", return_value=[("tanglin_gate", 0.93), ("swan_lake", 0.04)])
+    @mock.patch("portal.api.requests.post")
+    def test_confident_model_answers_without_plantnet(self, fake_post, _classify, _model):
+        photo = SimpleUploadedFile("gate.jpg", b"jpegbytes", content_type="image/jpeg")
+        r = self.client.post("/api/identify", {"image": photo}).json()
+        fake_post.assert_not_called()
+        self.assertEqual(r["source"], "plantdex")
+        self.assertEqual(r["results"][0]["species"]["commonNames"], ["Tanglin Gate"])
+        self.assertAlmostEqual(r["results"][0]["score"], 0.93)
+
+    @mock.patch.dict("os.environ", {"PLANTNET_API_KEY": "test-key"})
+    @mock.patch("portal.api.classifier.available", return_value=True)
+    @mock.patch("portal.api.classifier.classify", return_value=[("costus", 0.35), ("calathea", 0.30)])
+    @mock.patch("portal.api.requests.post")
+    def test_unsure_model_falls_back_to_plantnet(self, fake_post, _classify, _model):
+        fake_post.return_value = mock.Mock(status_code=200, ok=True,
+                                           json=lambda: {"results": [{"species": {"scientificNameWithoutAuthor": "Samanea saman"}}]})
+        photo = SimpleUploadedFile("plant.jpg", b"jpegbytes", content_type="image/jpeg")
+        r = self.client.post("/api/identify", {"image": photo}).json()
+        fake_post.assert_called_once()
+        self.assertEqual(r["source"], "plantnet")
+
+    @mock.patch.dict("os.environ", {}, clear=False)
+    @mock.patch("portal.api.classifier.available", return_value=True)
+    @mock.patch("portal.api.classifier.classify", return_value=[("costus", 0.35), ("calathea", 0.30)])
+    def test_unsure_model_without_plantnet_key_is_no_match(self, _classify, _model):
+        import os
+        os.environ.pop("PLANTNET_API_KEY", None)
+        photo = SimpleUploadedFile("plant.jpg", b"jpegbytes", content_type="image/jpeg")
+        r = self.client.post("/api/identify", {"image": photo})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()["results"], [])

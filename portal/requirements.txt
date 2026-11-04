@@ -1,3 +1,4 @@
 Django>=6.1.1,<6.2
 Pillow>=10.0   # needed for image uploads (botanical / architecture records)
 requests>=2.31 # forwards the app's plant photos to Pl@ntNet (api.py)
+ai-edge-litert>=2.0   # runs our own PlantDex model, ml/plantdex_model.tflite (classifier.py)

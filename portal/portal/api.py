@@ -10,6 +10,7 @@ Admin are the existing role groups. Like the Flask version, there is no token
 auth yet: the app identifies itself by userId, so treat this as a prototype.
 """
 import json
+import logging
 import os
 
 import requests
@@ -19,12 +20,19 @@ from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
+from . import classifier
 from .audit import log_action
 from .models import ArchitectureRecord, AuditLog, BotanicalRecord, RecordBase
 from .roles import get_role
 
+logger = logging.getLogger(__name__)
+
 # Portal group name -> role code the app routes on (see Roles.java)
 ROLE_CODES = {"Researcher": "RESEARCHER", "User Admin": "USER ADMIN", "System Admin": "SYSTEM ADMIN"}
+
+# Below this top-class probability our model's answer is not trusted (it always picks
+# one of its classes, even for a photo of something it was never trained on).
+MIN_MODEL_CONFIDENCE = float(os.environ.get("PLANTDEX_MIN_CONFIDENCE", "0.6"))
 
 
 def _body(request):
@@ -226,15 +234,31 @@ def collectibles(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def identify(request):
-    """Forwards the photo to Pl@ntNet and returns its JSON unchanged."""
+    """Identifies the photo with our own PlantDex model (classifier.py) when it is
+    confident enough; otherwise forwards the photo to Pl@ntNet and returns its JSON
+    unchanged. Both replies have the same shape: results[0].species / .score.
+    The "source" field says which one answered ("plantdex" or "plantnet")."""
     photo = request.FILES.get("image")
     if photo is None:
         return JsonResponse({"error": "No image uploaded."}, status=400)
     if photo.content_type not in ("image/jpeg", "image/png"):
         return JsonResponse({"error": "Upload a JPEG or PNG image."}, status=415)
 
+    model_guess = None
+    if classifier.available():
+        try:
+            label, score = classifier.classify(photo)[0]
+            model_guess = classifier.as_plantnet_result(label, score)
+        except Exception:
+            logger.exception("PlantDex model failed; falling back to Pl@ntNet")
+        photo.seek(0)
+    if model_guess and model_guess["score"] >= MIN_MODEL_CONFIDENCE:
+        return JsonResponse({"source": "plantdex", "results": [model_guess]})
+
     api_key = os.environ.get("PLANTNET_API_KEY")
     if not api_key:
+        if model_guess:   # model unsure and no Pl@ntNet to ask: treat as no match
+            return JsonResponse({"source": "plantdex", "matched": False, "results": []})
         return JsonResponse({"error": "Pl@ntNet API key is missing."}, status=500)
 
     try:
@@ -252,7 +276,10 @@ def identify(request):
     if not response.ok:
         return JsonResponse({"error": "Pl@ntNet returned an error.", "status": response.status_code}, status=502)
     try:
-        return JsonResponse(response.json(), safe=False)
+        data = response.json()
+        if isinstance(data, dict):
+            data["source"] = "plantnet"
+        return JsonResponse(data, safe=False)
     except ValueError:
         return JsonResponse({"error": "Invalid response from Pl@ntNet."}, status=502)
 
