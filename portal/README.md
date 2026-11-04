@@ -8,7 +8,7 @@ Visitors only use the Android app. This portal is for three staff roles:
 | Role | What they do here |
 |---|---|
 | **User Admin** | Manage staff accounts and profile types (roles and their permissions) |
-| **System Admin** | Manage discovery collectibles, read collectible error logs |
+| **System Admin** | Create, view, update, delete and search discovery collectibles (cards visitors unlock), read collectible error logs |
 | **Researcher** | Create, view, update, delete and search botanical and architecture records (with images) |
 
 All three can view the **Audit Log**.
@@ -28,6 +28,7 @@ python manage.py migrate
 python manage.py seed_roles        # roles, profile types and 3 demo logins
 python manage.py seed_demo         # optional: 21 extra test accounts + sample error logs
 python manage.py seed_records      # optional: 15 sample plants + 15 sample structures
+python manage.py seed_collectibles # optional: a sample collectible for each Published record
 python manage.py runserver
 ```
 
@@ -72,9 +73,13 @@ portal/                   The one app that holds the whole portal
   templates/403.html, 404.html   Styled error pages
   static/portal/style.css All styling, shared by every page
   records.py              Researcher: botanical + architecture CRUD (one shared code path)
-  management/commands/    seed_roles, seed_demo, seed_records
+  collectible_views.py    System Admin: collectible list / create / view / edit / delete / search
+  collectible_forms.py    Collectible form (verified-record and duplicate rules)
+  storage.py              DatabaseStorage: keeps uploaded pictures INSIDE the database
+  file_views.py           Serves those pictures at /files/...
+  management/commands/    seed_roles, seed_demo, seed_records, seed_collectibles
   migrations/             Database history. COMMIT THESE.
-  tests.py, test_records.py   113 automated tests
+  tests.py, test_records.py, test_collectibles.py   177 automated tests
 ```
 
 ### The one idea to understand: how access control works
@@ -148,6 +153,18 @@ examples of hand-written pages.
 
 ---
 
+## Pictures: database or local folder?
+
+| Pictures of | Stored | Shared with teammates on one Azure database? |
+|---|---|---|
+| **Collectibles** | Inside the database (`portal_storedfile`), via `portal/storage.py` | **Yes** |
+| Botanical and architecture records | Local `media/` folder | No (broken image for everyone else) |
+
+To store another image field in the database, add `storage=database_storage` to the field
+(`from .storage import database_storage`) and make a migration. Nothing else changes.
+
+---
+
 ## Gotchas we already ran into
 
 | Symptom | Cause and fix |
@@ -160,7 +177,7 @@ examples of hand-written pages.
 | Pasting code into `manage.py shell` gives `IndentationError` | Paste breaks indentation. Use a management command or script file instead |
 | `no such table` / missing column | Run `python manage.py migrate` after every `git pull` |
 | `ImageField ... requires Pillow` | `pip install -r requirements.txt` (Pillow is listed) |
-| Record images show as broken | Images are files in `media/` on **one computer**; only the path is in the database (see INSTALLATION.md, shared database) |
+| A record picture shows as broken (not a collectible) | Images are files in `media/` on **one computer**; only the path is in the database (see INSTALLATION.md, shared database) |
 | CSS changes do not appear | Hard refresh with `Ctrl+Shift+R` |
 
 ---

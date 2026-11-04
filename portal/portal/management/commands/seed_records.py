@@ -2,7 +2,8 @@ import io
 import random
 
 from django.core.files.base import ContentFile
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
+from django.db.models import ProtectedError
 from PIL import Image, ImageDraw
 
 from portal.models import ArchitectureRecord, BotanicalRecord
@@ -108,9 +109,13 @@ class Command(BaseCommand):
         say = self.stdout.write if opts["verbosity"] > 0 else (lambda *_: None)
 
         if opts["clear"]:
-            for model in (BotanicalRecord, ArchitectureRecord):
-                deleted, _ = model.all_objects.filter(image__contains="sample-").delete()
-                say(f"removed {deleted} sample {model.__name__} rows")
+            try:
+                for model in (BotanicalRecord, ArchitectureRecord):
+                    deleted, _ = model.all_objects.filter(image__contains="sample-").delete()
+                    say(f"removed {deleted} sample {model.__name__} rows")
+            except ProtectedError:
+                raise CommandError("A collectible is still linked to these records. "
+                                   "Run `python manage.py seed_collectibles --clear` first, then try again.")
             return
 
         rng = random.Random(2026)        # same "random" data every time

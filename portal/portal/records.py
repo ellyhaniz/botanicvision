@@ -151,6 +151,14 @@ def make_views(cfg):
         obj = find(request, pk)
         if obj is None:
             return redirect(cfg.url_list)
+        # A collectible is built on this record: deleting it would leave a card that visitors
+        # can never unlock. A System Admin must delete or relink the collectible first.
+        collectible = getattr(obj, "collectible", None)
+        if collectible is not None:
+            messages.error(request, f"'{name_of(obj)}' is used by the collectible '{collectible.name}', so it "
+                                    "cannot be deleted. Ask a System Admin to delete or relink that "
+                                    "collectible first.")
+            return redirect(cfg.url_detail, pk=obj.pk)
         if request.method == "POST":
             name = name_of(obj)
             with transaction.atomic():

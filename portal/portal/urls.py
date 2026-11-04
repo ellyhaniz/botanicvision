@@ -1,6 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import api, views, account_views, profile_views, error_log_views
+from . import collectible_views, file_views
 from .records import architecture, botanical
 
 urlpatterns = [
@@ -34,6 +35,16 @@ urlpatterns = [
         template_name="portal/password_reset_complete.html"),
         name="password_reset_complete"),
 
+
+    # System Admin: discovery collectibles (SA-04 .. SA-08)
+    path("section/collectibles/", collectible_views.collectible_list, name="collectible_list"),
+    path("section/collectibles/new/", collectible_views.collectible_create, name="collectible_new"),
+    path("section/collectibles/<int:pk>/", collectible_views.collectible_detail, name="collectible_detail"),
+    path("section/collectibles/<int:pk>/edit/", collectible_views.collectible_update, name="collectible_edit"),
+    path("section/collectibles/<int:pk>/delete/", collectible_views.collectible_delete, name="collectible_delete"),
+
+    # Pictures stored in the database (collectible cards)
+    path("files/<path:name>", file_views.stored_file, name="stored_file"),
 
     # Researcher records (botanical + architecture)
     *botanical.urls,
