@@ -101,6 +101,11 @@ if os.environ.get("DB_ENGINE", "sqlite") == "mssql":
             "HOST": os.environ.get("DB_HOST", "localhost"),
             "PORT": os.environ.get("DB_PORT", ""),
             "OPTIONS": _options,
+            # Reuse each connection for up to 5 minutes instead of signing in to Azure again
+            # for every request (each new login over the internet adds about a second).
+            # Health checks replace a connection that dropped while it sat idle.
+            "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "300")),
+            "CONN_HEALTH_CHECKS": True,
         }
     }
 else:
