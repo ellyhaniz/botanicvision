@@ -36,6 +36,9 @@ public final class ApiClient {
     private static final String BASE_URL = "http://localhost:8000";
 
     private static final int TIMEOUT_MS = 20000;
+    // Reads wait longer: the first request after a quiet spell waits for the paused Azure
+    // database to wake up, which can take most of a minute.
+    private static final int READ_TIMEOUT_MS = 60000;
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
     private ApiClient() {}
@@ -165,7 +168,7 @@ public final class ApiClient {
                 conn = (HttpURLConnection) new URL(BASE_URL + "/api/identify").openConnection();
                 conn.setRequestMethod("POST");
                 conn.setConnectTimeout(TIMEOUT_MS);
-                conn.setReadTimeout(45000);
+                conn.setReadTimeout(READ_TIMEOUT_MS);
                 conn.setDoOutput(true);
                 conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
@@ -210,7 +213,7 @@ public final class ApiClient {
                     conn = (HttpURLConnection) new URL(BASE_URL + path).openConnection();
                     conn.setRequestMethod(method);
                     conn.setConnectTimeout(TIMEOUT_MS);
-                    conn.setReadTimeout(TIMEOUT_MS);
+                    conn.setReadTimeout(READ_TIMEOUT_MS);
                     if (body != null) {
                         conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
                         conn.setDoOutput(true);

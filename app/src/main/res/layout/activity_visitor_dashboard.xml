@@ -171,7 +171,7 @@
                         android:id="@+id/tvDiscoveredCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="18 of 60"
+                        android:text="0 of 0"
                         android:textColor="@color/plantdex_text_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -212,7 +212,7 @@
                         android:id="@+id/tvFloraCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12"
+                        android:text="0"
                         android:textColor="@color/plantdex_text_primary"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -235,7 +235,7 @@
                         android:id="@+id/tvArchitectureCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6"
+                        android:text="0"
                         android:textColor="@color/plantdex_text_primary"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -288,6 +288,7 @@
                     android:gravity="center_vertical">
 
                     <ImageView
+                        android:id="@+id/ivRecentIcon"
                         android:layout_width="38dp"
                         android:layout_height="38dp"
                         android:background="@drawable/bg_icon_tile"
@@ -307,7 +308,7 @@
                             android:id="@+id/tvDiscoveryName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tembusu Tree"
+                            android:text="No discoveries yet"
                             android:textColor="@color/plantdex_text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -316,7 +317,7 @@
                             android:id="@+id/tvCollectibleId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Collectible #0087"
+                            android:text="Scan a plant or landmark to unlock your first card"
                             android:textColor="@color/plantdex_text_muted"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -336,12 +337,14 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/dividerRecent"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="14dp"
                     android:background="@color/plantdex_divider" />
 
                 <LinearLayout
+                    android:id="@+id/rowRecentUnlocked"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -359,12 +362,13 @@
                         android:id="@+id/tvUnlockedDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="07 Dec 2026, 18:14:05"
+                        android:text="—"
                         android:textColor="@color/plantdex_text_primary"
                         android:textSize="13sp" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/rowRecentCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -399,6 +403,7 @@
             <!-- Undiscovered example card -->
             <LinearLayout
                 android:id="@+id/cardUndiscovered"
+                    android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

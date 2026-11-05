@@ -27,8 +27,8 @@ import android.widget.EditText;
 import java.util.Locale;
 
 
-/** #VS-09 (view inventory / track progress) and #VS-10 (filter by type/rarity). Shows only the
- * collectibles this visitor has unlocked by scanning; the progress bar counts them against all cards. */
+/** #VS-09 (view inventory / track progress) and #VS-10 (filter by type/rarity/discovery status).
+ * Unlocked collectibles come first, then the locked ones still to discover. */
 public class CollectibleInventoryActivity extends AppCompatActivity {
 
     private final List<Collectible> allCollectibles = new ArrayList<>();
@@ -112,37 +112,78 @@ public class CollectibleInventoryActivity extends AppCompatActivity {
         });
     }
 
-    /** Only the cards this visitor has unlocked by scanning, two per row. */
-    /** Only the cards this visitor has unlocked by scanning, two per row. */
+    /** The visitor's unlocked cards first, then the ones still to discover (shown as "???"),
+     *  each section two per row. */
     private void renderItems() {
         gridRows.removeAllViews();
 
-        List<Collectible> discovered = new ArrayList<>();
-        List<Collectible> visible = new ArrayList<>();
+        List<Collectible> found = new ArrayList<>(), shownFound = new ArrayList<>();
+        List<Collectible> locked = new ArrayList<>(), shownLocked = new ArrayList<>();
         for (Collectible item : allCollectibles) {
-            if (!DiscoveryStore.isDiscovered(this, item.getId())) continue;
-            discovered.add(item);
-            String scientific = item.getScientificName();
-            boolean matchesName = searchQuery.isEmpty()
-                    || item.getName().toLowerCase(Locale.ROOT).contains(searchQuery)
-                    || (scientific != null
-                    && scientific.toLowerCase(Locale.ROOT).contains(searchQuery));
-            if (filter.matches(item, true) && matchesName) visible.add(item);
+            boolean discovered = DiscoveryStore.isDiscovered(this, item.getId());
+            (discovered ? found : locked).add(item);
+            if (!filter.matches(item, discovered)) continue;
+            if (discovered && matchesSearch(item)) shownFound.add(item);
+            // A locked card's name is a secret, so searching by name only finds unlocked ones.
+            if (!discovered && searchQuery.isEmpty()) shownLocked.add(item);
         }
 
         int total = allCollectibles.size();
-        int found = discovered.size();
-        int percent = total == 0 ? 0 : Math.round(found * 100f / total);
-        tvProgress.setText(found + " / " + total + " · " + percent + "%");
+        int percent = total == 0 ? 0 : Math.round(found.size() * 100f / total);
+        tvProgress.setText(found.size() + " / " + total + " · " + percent + "%");
         progressBar.setMax(Math.max(total, 1));
-        progressBar.setProgress(found);
+        progressBar.setProgress(found.size());
 
-        // Nothing scanned yet: say so instead of showing an empty grid.
-        groupEmpty.setVisibility(found == 0 && !allCollectibles.isEmpty() ? View.VISIBLE : View.GONE);
-        groupNoResults.setVisibility(found > 0 && visible.isEmpty() ? View.VISIBLE : View.GONE);
+        groupEmpty.setVisibility(View.GONE);
+        groupNoResults.setVisibility(total > 0 && shownFound.isEmpty() && shownLocked.isEmpty()
+                ? View.VISIBLE : View.GONE);
+        if (total == 0 || (shownFound.isEmpty() && shownLocked.isEmpty())) return;
 
+        boolean filtering = !searchQuery.isEmpty() || filter.isActive();
+        if (!shownFound.isEmpty() || !filtering) {
+            addSectionTitle("Discovered · " + found.size());
+            if (found.isEmpty()) {
+                addHint("Nothing yet. Scan a plant or landmark in the gardens to unlock its card.");
+            }
+            addGrid(shownFound, false);
+        }
+        if (!shownLocked.isEmpty()) {
+            addSectionTitle("Still to discover · " + locked.size());
+            addGrid(shownLocked, true);
+        }
+    }
+
+    private boolean matchesSearch(Collectible item) {
+        String scientific = item.getScientificName();
+        return searchQuery.isEmpty()
+                || item.getName().toLowerCase(Locale.ROOT).contains(searchQuery)
+                || (scientific != null && scientific.toLowerCase(Locale.ROOT).contains(searchQuery));
+    }
+
+    private void addSectionTitle(String text) {
+        TextView title = new TextView(this);
+        title.setText(text);
+        title.setTextColor(getColor(R.color.white));
+        title.setTextSize(15);
+        title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
+        int top = Math.round(getResources().getDisplayMetrics().density * (gridRows.getChildCount() == 0 ? 4 : 18));
+        int bottom = Math.round(getResources().getDisplayMetrics().density * 6);
+        title.setPadding(0, top, 0, bottom);
+        gridRows.addView(title);
+    }
+
+    private void addHint(String text) {
+        TextView hint = new TextView(this);
+        hint.setText(text);
+        hint.setTextColor(getColor(R.color.white));
+        hint.setAlpha(0.8f);
+        hint.setTextSize(13);
+        gridRows.addView(hint);
+    }
+
+    private void addGrid(List<Collectible> items, boolean locked) {
         LinearLayout row = null;
-        for (int i = 0; i < visible.size(); i++) {
+        for (int i = 0; i < items.size(); i++) {
             if (i % 2 == 0) {
                 row = new LinearLayout(this);
                 row.setOrientation(LinearLayout.HORIZONTAL);
@@ -150,19 +191,35 @@ public class CollectibleInventoryActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
             }
-            Collectible item = visible.get(i);
-            View tile = LayoutInflater.from(this).inflate(R.layout.tile_collectible, row, false);
-            int icon = "Architecture".equals(item.getCategory())
-                    ? R.drawable.ic_building : R.drawable.ic_leaf;
-            ((TextView) tile.findViewById(R.id.tileName)).setText(item.getName());
-            ((TextView) tile.findViewById(R.id.tileRarity)).setText(item.getRarity());
-            ((ImageView) tile.findViewById(R.id.tileIcon)).setImageResource(icon);
-            tile.setOnClickListener(v -> startActivity(CollectibleCardActivity.discovered(this, item)));
-            row.addView(tile);
+            row.addView(locked ? lockedTile(items.get(i), row) : discoveredTile(items.get(i), row));
         }
         // An odd last card keeps half the width instead of stretching across the row.
-        if (row != null && visible.size() % 2 != 0) {
+        if (row != null && items.size() % 2 != 0) {
             row.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1f));
         }
+    }
+
+    private View discoveredTile(Collectible item, LinearLayout row) {
+        View tile = LayoutInflater.from(this).inflate(R.layout.tile_collectible, row, false);
+        int icon = "Architecture".equals(item.getCategory()) ? R.drawable.ic_building : R.drawable.ic_leaf;
+        ((TextView) tile.findViewById(R.id.tileName)).setText(item.getName());
+        ((TextView) tile.findViewById(R.id.tileRarity)).setText(item.getRarity());
+        ((ImageView) tile.findViewById(R.id.tileIcon)).setImageResource(icon);
+        tile.setOnClickListener(v -> startActivity(CollectibleCardActivity.discovered(this, item)));
+        return tile;
+    }
+
+    private View lockedTile(Collectible item, LinearLayout row) {
+        View tile = LayoutInflater.from(this).inflate(R.layout.tile_collectible, row, false);
+        TextView name = tile.findViewById(R.id.tileName);
+        TextView status = tile.findViewById(R.id.tileRarity);
+        name.setText("???");
+        status.setText("Undiscovered");
+        name.setTextColor(getColor(R.color.plantdex_text_muted));
+        status.setTextColor(getColor(R.color.plantdex_text_muted));
+        ((ImageView) tile.findViewById(R.id.tileIcon)).setImageResource(R.drawable.ic_lock);
+        tile.findViewById(R.id.tileIconFrame).setBackgroundColor(getColor(R.color.plantdex_common_bg));
+        tile.setOnClickListener(v -> startActivity(CollectibleCardActivity.undiscovered(this, item)));
+        return tile;
     }
 }
