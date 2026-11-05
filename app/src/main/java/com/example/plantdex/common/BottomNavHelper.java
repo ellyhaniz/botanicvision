@@ -13,6 +13,7 @@ import com.example.plantdex.R;
 import com.example.plantdex.common.boundary.MyAccountActivity;
 import com.example.plantdex.common.control.AuthController;
 import com.example.plantdex.common.boundary.EditMyAccountActivity;
+import com.example.plantdex.common.boundary.NotificationsActivity;
 import com.example.plantdex.researcher.CreateRecordActivity;
 import com.example.plantdex.researcher.RecordDetailActivity;
 import com.example.plantdex.researcher.RecordsListActivity;
@@ -55,8 +56,11 @@ public final class BottomNavHelper {
             activity.startActivity(intent);
         });
 
-        navNotifications.setOnClickListener(v ->
-                Toast.makeText(activity, "You're all caught up — no new notifications.", Toast.LENGTH_SHORT).show());
+        navNotifications.setOnClickListener(v -> {
+            if (!(activity instanceof NotificationsActivity)) {
+                activity.startActivity(new Intent(activity, NotificationsActivity.class));
+            }
+        });
 
         navLogout.setOnClickListener(v -> showLogoutDialog(activity, role));
 
@@ -79,6 +83,7 @@ public final class BottomNavHelper {
         if (isHomeSection(activity)) current = navHome;
         else if (activity instanceof MyAccountActivity || activity instanceof EditMyAccountActivity) current = navProfile;
         else if (isIdentifySection(activity)) current = navCamera;
+        else if (activity instanceof NotificationsActivity) current = navNotifications;
         if (current != null) {
             current.setBackgroundResource(R.drawable.bg_nav_selected);
             current.setColorFilter(activity.getColor(R.color.plantdex_bg));

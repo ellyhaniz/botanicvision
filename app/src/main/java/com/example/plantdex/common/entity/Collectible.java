@@ -22,6 +22,7 @@ public class Collectible {
     private final String imageUrl; // card picture, "" if none
     private final boolean discovered; // by the logged-in visitor, according to the server
     private final String unlockedAt; // ISO date-time from the server, null if not discovered
+    private String addedAt; // ISO date-time the card was added in the portal, null if unknown
 
     public Collectible(String id, String name, String category, String rarity, String scientificName,
                         String description, String feature, String funFact) {
@@ -45,7 +46,7 @@ public class Collectible {
     }
 
     public static Collectible fromJson(JSONObject json) {
-        return new Collectible(
+        Collectible c = new Collectible(
                 json.optString("id", ""),
                 json.optString("name", ""),
                 json.optString("category", ""),
@@ -57,6 +58,8 @@ public class Collectible {
                 json.optString("imageUrl", ""),
                 json.optBoolean("discovered", false),
                 json.isNull("unlockedAt") ? null : json.optString("unlockedAt", null));
+        c.addedAt = json.isNull("addedAt") ? null : json.optString("addedAt", null);
+        return c;
     }
 
     public String getImageUrl() {
@@ -69,6 +72,11 @@ public class Collectible {
 
     public String getUnlockedAt() {
         return unlockedAt;
+    }
+
+    /** ISO date-time the card was added in the portal, or null (e.g. offline sample cards). */
+    public String getAddedAt() {
+        return addedAt;
     }
 
     public String getId() {

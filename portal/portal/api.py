@@ -230,6 +230,7 @@ def _collectible_json(request, c, unlocked_at=None):
         "imageUrl": request.build_absolute_uri(f"/api/collectibles/{c.pk}/image") if c.image else "",
         "discovered": unlocked_at is not None,
         "unlockedAt": unlocked_at.isoformat() if unlocked_at else None,
+        "addedAt": c.created_at.isoformat() if c.created_at else None,   # for "new to discover" notifications
     }
 
 

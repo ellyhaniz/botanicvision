@@ -39,6 +39,7 @@
 
         <!-- Shared account -->
         <activity android:name=".common.boundary.MyAccountActivity" android:screenOrientation="portrait" />
+        <activity android:name=".common.boundary.NotificationsActivity" android:screenOrientation="portrait" />
         <activity android:name=".common.boundary.EditMyAccountActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
 
         <!-- Visitor -->

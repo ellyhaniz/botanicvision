@@ -39,6 +39,7 @@ class ScanUnlockTests(CollectibleTestCase):
                          (str(self.card.pk), "Architecture", None))
         self.assertFalse(item["discovered"])
         self.assertTrue(item["imageUrl"].endswith(f"/api/collectibles/{self.card.pk}/image"))
+        self.assertEqual(item["addedAt"], self.card.created_at.isoformat())   # for "new to discover"
 
     def test_catalog_hides_card_whose_record_is_no_longer_verified(self):
         record = self.botanical("Rain Tree", "Samanea saman")
