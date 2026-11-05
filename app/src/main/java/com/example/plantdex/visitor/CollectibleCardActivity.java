@@ -107,7 +107,7 @@ public class CollectibleCardActivity extends AppCompatActivity {
             findViewById(R.id.btnMoreInfo).setOnClickListener(v ->
                     VisitorSheets.showSearchMoreInfo(this, name + " Singapore Botanic Gardens"));
             findViewById(R.id.btnShare).setOnClickListener(v ->
-                    VisitorSheets.showShareDiscovery(this, name, rarity));
+                    VisitorSheets.showShareDiscovery(this, name, rarity, getIntent().getStringExtra(EXTRA_IMAGE_URL)));
             loadCardPhoto(getIntent().getStringExtra(EXTRA_IMAGE_URL));
         } else {
             ((TextView) findViewById(R.id.tvCardName)).setText("???");

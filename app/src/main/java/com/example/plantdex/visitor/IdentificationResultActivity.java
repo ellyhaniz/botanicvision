@@ -144,7 +144,7 @@ public class IdentificationResultActivity extends AppCompatActivity {
             btnPrimary.setOnClickListener(v ->
                     VisitorSheets.showSearchMoreInfo(this, name + " Singapore Botanic Gardens"));
             btnSecondary.setOnClickListener(v ->
-                    VisitorSheets.showShareDiscovery(this, name, rarity));
+                    VisitorSheets.showShareDiscovery(this, name, rarity, getIntent().getStringExtra(EXTRA_PHOTO_URI)));
         } else {
             ((TextView) findViewById(R.id.tvNoMatchSubmittedAt)).setText(submittedAt != null ? submittedAt : "—");
 

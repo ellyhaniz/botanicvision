@@ -2,11 +2,14 @@ package com.example.plantdex.visitor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -14,6 +17,10 @@ import com.example.plantdex.R;
 import com.example.plantdex.common.entity.Collectible;
 import com.example.plantdex.visitor.control.CollectibleController;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,41 +55,73 @@ public final class VisitorSheets {
     }
 
     public static void showShareDiscovery(Activity activity, String name, String rarity) {
-        BottomSheetDialog dialog = new BottomSheetDialog(activity);
-        View view = LayoutInflater.from(activity).inflate(R.layout.sheet_share_discovery, null);
-        dialog.setContentView(view);
+        showShareDiscovery(activity, name, rarity, null);
+    }
 
-        TextView tvPreview = view.findViewById(R.id.tvSharePreview);
-        tvPreview.setText("\"I just unlocked the " + name + " (" + rarity + ") in PlantDex at the Singapore Botanic Gardens!\"");
-
-        // Fills in the real "X/Y discovered" once the catalog's loaded, rather than a fake count.
+    /**
+     * Shares a discovery: draws a picture with the photo, name, rarity, message and progress
+     * (ShareCardRenderer) and opens Android's share menu with it, so the visitor picks
+     * Instagram, WhatsApp, Telegram, etc. The message is also sent as text for apps that use it.
+     *
+     * @param image the visitor's own photo (content://) or the card's picture (http), or null
+     */
+    public static void showShareDiscovery(Activity activity, String name, String rarity, String image) {
+        Toast.makeText(activity, "Preparing your post…", Toast.LENGTH_SHORT).show();
+        String message = "I just unlocked the " + name + " in PlantDex at the Singapore Botanic Gardens!";
+        // Progress ("2 / 14 discovered") needs the catalog; share without it if that fails.
         CollectibleController.loadAll(activity, new CollectibleController.Callback() {
             @Override
             public void onSuccess(List<Collectible> all) {
-                int total = all.size();
                 int unlocked = 0;
                 for (Collectible c : all) {
                     if (DiscoveryStore.isDiscovered(activity, c.getId())) unlocked++;
                 }
-                tvPreview.setText("\"I just unlocked the " + name + " (" + rarity + ") in PlantDex at the Singapore Botanic Gardens! "
-                        + unlocked + "/" + total + " discovered.\"");
+                share(activity, name, rarity, image, message, unlocked + " / " + all.size() + " discovered");
             }
 
             @Override
-            public void onError(String message) {
-                // Keep the shorter preview text above — not worth failing the sheet over.
+            public void onError(String error) {
+                share(activity, name, rarity, image, message, null);
             }
         });
+    }
 
-        View.OnClickListener shareClick = v ->
-                Toast.makeText(activity, "Sharing — prototype only.", Toast.LENGTH_SHORT).show();
-        view.findViewById(R.id.shareInstagram).setOnClickListener(shareClick);
-        view.findViewById(R.id.shareWhatsapp).setOnClickListener(shareClick);
-        view.findViewById(R.id.shareFacebook).setOnClickListener(shareClick);
-        view.findViewById(R.id.shareMore).setOnClickListener(shareClick);
-
-        view.findViewById(R.id.btnCancelShare).setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+    private static void share(Activity activity, String name, String rarity, String image,
+                              String message, String progress) {
+        new Thread(() -> {
+            Uri picture = null;
+            try {
+                Bitmap card = ShareCardRenderer.render(activity, image, name, rarity, message, progress);
+                File dir = new File(activity.getCacheDir(), "shared");
+                if (dir.isDirectory() || dir.mkdirs()) {
+                    File file = new File(dir, "plantdex-discovery.jpg");
+                    try (OutputStream out = new FileOutputStream(file)) {
+                        card.compress(Bitmap.CompressFormat.JPEG, 92, out);
+                    }
+                    picture = FileProvider.getUriForFile(
+                            activity, activity.getPackageName() + ".fileprovider", file);
+                }
+            } catch (IOException | RuntimeException e) {
+                android.util.Log.w("ShareDiscovery", "Could not make the share picture", e);
+            }
+            Uri finalPicture = picture;
+            String text = message + (progress != null ? " " + progress + "." : "");
+            activity.runOnUiThread(() -> {
+                if (activity.isFinishing() || activity.isDestroyed()) return;
+                Intent send = new Intent(Intent.ACTION_SEND);
+                send.putExtra(Intent.EXTRA_TEXT, text);
+                if (finalPicture != null) {
+                    send.setType("image/jpeg");
+                    send.putExtra(Intent.EXTRA_STREAM, finalPicture);
+                    send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    // Lets the share menu show a preview of the picture.
+                    send.setClipData(android.content.ClipData.newRawUri("", finalPicture));
+                } else {
+                    send.setType("text/plain");
+                }
+                activity.startActivity(Intent.createChooser(send, "Share your discovery"));
+            });
+        }).start();
     }
 
     public interface FilterCallback {

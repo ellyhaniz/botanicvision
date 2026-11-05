@@ -3,4 +3,8 @@
     <cache-path
         name="captured_photos"
         path="captured_photos/" />
+    <!-- card pictures downloaded for sharing (VisitorSheets.share) -->
+    <cache-path
+        name="shared"
+        path="shared/" />
 </paths>
