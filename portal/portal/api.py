@@ -15,14 +15,14 @@ import os
 
 import requests
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from . import classifier
 from .audit import log_action
-from .models import ArchitectureRecord, AuditLog, BotanicalRecord, RecordBase
+from .models import AuditLog, Collectible, CollectibleUnlock, StoredFile
 from .roles import get_role
 
 logger = logging.getLogger(__name__)
@@ -208,26 +208,76 @@ STARTER_COLLECTIBLES = [
 ]
 
 
-def _image_url(request, record):
-    return request.build_absolute_uri(record.image.url) if record.image else ""
+def _visible_collectibles():
+    """Published collectibles whose linked record is still verified, i.e. what visitors may see."""
+    return [c for c in Collectible.objects.filter(status=Collectible.PUBLISHED)
+            .select_related("category", "botanical_record", "architecture_record")
+            if c.linked_available]
+
+
+def _collectible_json(request, c, unlocked_at=None):
+    """One collectible, shaped like the app's Collectible entity (Collectible.java)."""
+    plant, place = c.botanical_record, c.architecture_record
+    return {
+        "id": str(c.pk),
+        "name": c.name,
+        "category": c.category.name,
+        "rarity": c.get_rarity_display(),
+        "scientificName": plant.scientific_name if plant else None,
+        "description": c.description,
+        "feature": plant.family if plant else f"{place.architectural_style}, {place.construction_date}",
+        "funFact": (plant or place).fun_fact,
+        "imageUrl": request.build_absolute_uri(f"/api/collectibles/{c.pk}/image") if c.image else "",
+        "discovered": unlocked_at is not None,
+        "unlockedAt": unlocked_at.isoformat() if unlocked_at else None,
+    }
+
+
+def _visitor(request):
+    """The logged-in app user named by ?userId= / the userId form field, or None."""
+    user_id = request.GET.get("userId") or request.POST.get("userId") or ""
+    return User.objects.filter(pk=user_id).first() if user_id.isdigit() else None
 
 
 @require_http_methods(["GET"])
 def collectibles(request):
-    """Published researcher records, shaped like the app's Collectible entity."""
-    items = [
-        {"id": f"B{r.pk}", "name": r.common_name, "category": "Flora", "rarity": "Common",
-         "scientificName": r.scientific_name, "description": r.identification_features,
-         "feature": r.family, "funFact": r.fun_fact, "imageUrl": _image_url(request, r)}
-        for r in BotanicalRecord.objects.filter(status=RecordBase.PUBLISHED)
-    ] + [
-        {"id": f"A{r.pk}", "name": r.name, "category": "Architecture", "rarity": "Common",
-         "scientificName": None, "description": r.description,
-         "feature": f"{r.architectural_style}, {r.construction_date}", "funFact": r.fun_fact,
-         "imageUrl": _image_url(request, r)}
-        for r in ArchitectureRecord.objects.filter(status=RecordBase.PUBLISHED)
-    ]
-    return JsonResponse({"collectibles": items or STARTER_COLLECTIBLES})
+    """The collectible catalog. With ?userId=, each card also says whether that visitor
+    has discovered it, and when (from CollectibleUnlock)."""
+    cards = _visible_collectibles()
+    if not cards:
+        return JsonResponse({"collectibles": STARTER_COLLECTIBLES})
+    user = _visitor(request)
+    unlocks = {} if user is None else dict(
+        CollectibleUnlock.objects.filter(visitor_username=user.username)
+        .values_list("collectible_id", "unlocked_at"))
+    return JsonResponse({"collectibles": [_collectible_json(request, c, unlocks.get(c.pk)) for c in cards]})
+
+
+@require_http_methods(["GET"])
+def collectible_image(request, pk):
+    """A published collectible's card picture. The app is not logged in to the portal,
+    so it can't use /files/ (staff only); this serves only what visitors may see."""
+    card = next((c for c in _visible_collectibles() if c.pk == pk), None)
+    stored = StoredFile.objects.filter(name=card.image.name).first() if card and card.image else None
+    if stored is None:
+        raise Http404("No such picture")
+    response = HttpResponse(bytes(stored.content), content_type=stored.content_type or "image/jpeg")
+    response["Cache-Control"] = "public, max-age=3600"
+    response["X-Content-Type-Options"] = "nosniff"
+    return response
+
+
+def _unlock_for_scan(request, label):
+    """If a published collectible uses this model label, record that the visitor unlocked it.
+    Returns (collectible JSON, newly unlocked) or (None, False)."""
+    card = next((c for c in _visible_collectibles() if c.model_label == label), None)
+    if card is None:
+        return None, False
+    user = _visitor(request)
+    if user is None:
+        return _collectible_json(request, card), False
+    unlock, created = CollectibleUnlock.objects.get_or_create(collectible=card, visitor_username=user.username)
+    return _collectible_json(request, card, unlock.unlocked_at), created
 
 
 # --------------------------------------------------------------- identify --
@@ -253,7 +303,9 @@ def identify(request):
             logger.exception("PlantDex model failed; falling back to Pl@ntNet")
         photo.seek(0)
     if model_guess and model_guess["score"] >= MIN_MODEL_CONFIDENCE:
-        return JsonResponse({"source": "plantdex", "results": [model_guess]})
+        card, newly_unlocked = _unlock_for_scan(request, model_guess["label"])
+        return JsonResponse({"source": "plantdex", "results": [model_guess],
+                             "collectible": card, "newlyUnlocked": newly_unlocked})
 
     api_key = os.environ.get("PLANTNET_API_KEY")
     if not api_key:
@@ -292,5 +344,6 @@ urls = [
     path("api/auth/reset-password", reset_password, name="api_reset_password"),
     path("api/users/<int:user_id>", update_my_profile, name="api_update_profile"),
     path("api/collectibles", collectibles, name="api_collectibles"),
+    path("api/collectibles/<int:pk>/image", collectible_image, name="api_collectible_image"),
     path("api/identify", identify, name="api_identify"),
 ]

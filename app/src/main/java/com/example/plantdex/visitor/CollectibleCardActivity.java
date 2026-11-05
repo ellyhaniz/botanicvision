@@ -34,12 +34,8 @@ public class CollectibleCardActivity extends AppCompatActivity {
     private static final String EXTRA_RARITY = "extra_rarity";
     private static final String EXTRA_SCIENTIFIC = "extra_scientific";
     private static final String EXTRA_DESCRIPTION = "extra_description";
-    // live collectible
-    private static final String EXTRA_SCAN_RESULT = "extra_scan_result";
-    private static final String EXTRA_SCORE = "extra_score";
-    private static final String EXTRA_SCANNED_AT = "extra_scanned_at";
+    private static final String EXTRA_FUN_FACT = "extra_fun_fact";
     private static final String EXTRA_IMAGE_URL = "extra_image_url";
-    private static final String EXTRA_IMAGE_CREDIT = "extra_image_credit";
 
     public static Intent discovered(Context context, Collectible c) {
         Intent intent = new Intent(context, CollectibleCardActivity.class);
@@ -50,6 +46,8 @@ public class CollectibleCardActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_RARITY, c.getRarity());
         intent.putExtra(EXTRA_SCIENTIFIC, c.getScientificName());
         intent.putExtra(EXTRA_DESCRIPTION, c.getDescription());
+        intent.putExtra(EXTRA_FUN_FACT, c.getFunFact());
+        intent.putExtra(EXTRA_IMAGE_URL, c.getImageUrl());
         return intent;
     }
 
@@ -60,23 +58,6 @@ public class CollectibleCardActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_RARITY, c.getRarity());
         return intent;
     }
-    //live collectible
-    public static Intent fromScan(Context context, String name, String scientificName,
-                                  double score, String scannedAt,
-                                  String imageUrl, String imageCredit) {
-        Intent intent = new Intent(context, CollectibleCardActivity.class);
-        intent.putExtra(EXTRA_SCAN_RESULT, true);
-        intent.putExtra(EXTRA_NAME, name);
-        intent.putExtra(EXTRA_SCIENTIFIC, scientificName);
-        intent.putExtra(EXTRA_CATEGORY, "Flora");
-        intent.putExtra(EXTRA_RARITY, "Rare");
-        intent.putExtra(EXTRA_SCORE, score);
-        intent.putExtra(EXTRA_SCANNED_AT, scannedAt);
-        intent.putExtra(EXTRA_IMAGE_URL, imageUrl);
-        intent.putExtra(EXTRA_IMAGE_CREDIT, imageCredit);
-        return intent;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +66,7 @@ public class CollectibleCardActivity extends AppCompatActivity {
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
         ((TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(Roles.VISITOR));
 
-        //live collectible
-        boolean scanResult = getIntent().getBooleanExtra(EXTRA_SCAN_RESULT, false);
-        boolean discovered = scanResult
-                || getIntent().getBooleanExtra(EXTRA_DISCOVERED, true);
+        boolean discovered = getIntent().getBooleanExtra(EXTRA_DISCOVERED, true);
 
         String id = getIntent().getStringExtra(EXTRA_ID);
         String name = getIntent().getStringExtra(EXTRA_NAME);
@@ -111,35 +89,30 @@ public class CollectibleCardActivity extends AppCompatActivity {
         TextView tvStatusPill = findViewById(R.id.tvCardStatusPill);
 
         if (discovered) {
-            // Replace the tvCardSubtitle setText line:
-            ((TextView) findViewById(R.id.tvCardSubtitle)).setText(
-                    scanResult ? "Pl@ntNet identification" : "Collectible #" + id);
+            ((TextView) findViewById(R.id.tvCardName)).setText(name);
+            ((TextView) findViewById(R.id.tvCardSubtitle)).setText("Collectible #" + id);
+            if (rarity != null) tvStatusPill.setText(rarity);
+            if (category != null) ((TextView) findViewById(R.id.tvCardCategory)).setText(category);
+            if (scientificName != null) {
+                ((TextView) findViewById(R.id.tvCardScientific)).setText(scientificName);
+            }
+            ((TextView) findViewById(R.id.tvCardUnlocked))
+                    .setText(orDash(DiscoveryStore.getUnlockedAt(this, id)));
+
+            String funFact = getIntent().getStringExtra(EXTRA_FUN_FACT);
+            String text = description != null && !description.isEmpty()
+                    ? description : "No description yet.";
+            if (funFact != null && !funFact.isEmpty()) text += "\n\nFun fact: " + funFact;
+            ((TextView) findViewById(R.id.tvCardDescription)).setText(text);
+
+            findViewById(R.id.btnMoreInfo).setOnClickListener(v ->
+                    VisitorSheets.showSearchMoreInfo(this, name + " Singapore Botanic Gardens"));
+            findViewById(R.id.btnShare).setOnClickListener(v ->
+                    VisitorSheets.showShareDiscovery(this, name, rarity));
+            loadCardPhoto(getIntent().getStringExtra(EXTRA_IMAGE_URL));
         } else {
             ((TextView) findViewById(R.id.tvCardName)).setText("???");
             ((TextView) findViewById(R.id.tvCardSubtitle)).setText("Collectible #" + id);
-            // Replace the tvCardUnlocked setText statement:
-            String unlockedAt = scanResult
-                    ? getIntent().getStringExtra(EXTRA_SCANNED_AT)
-                    : DiscoveryStore.getUnlockedAt(this, id);
-            ((TextView) findViewById(R.id.tvCardUnlocked)).setText(orDash(unlockedAt));
-            // Replace the tvCardDescription setText statement:
-            TextView descriptionView = findViewById(R.id.tvCardDescription);
-            if (scanResult) {
-                long confidence = Math.round(
-                        getIntent().getDoubleExtra(EXTRA_SCORE, 0) * 100);
-                descriptionView.setText(
-                        "Pl@ntNet identification confidence: " + confidence + "%.");
-            }
-            else {
-                descriptionView.setText(
-                        description != null && !description.isEmpty()
-                                ? description : "No description yet.");
-            }
-            if (scanResult) {
-                loadScanPhoto(
-                        getIntent().getStringExtra(EXTRA_IMAGE_URL),
-                        getIntent().getStringExtra(EXTRA_IMAGE_CREDIT));
-            }
             tvStatusPill.setText("Undiscovered");
             tvStatusPill.setBackgroundResource(R.drawable.bg_chip_unselected);
             tvStatusPill.setTextColor(getColor(R.color.plantdex_text_muted));
@@ -156,9 +129,10 @@ public class CollectibleCardActivity extends AppCompatActivity {
     private static String orDash(String value) {
         return value != null ? value : "—";
     }
-    // load scan photo
-    private void loadScanPhoto(String imageUrl, String imageCredit) {
-        if (imageUrl == null || !imageUrl.startsWith("https://")) return;
+    // Loads the collectible's picture from the portal (http://localhost:8000 over adb reverse).
+    private void loadCardPhoto(String imageUrl) {
+        if (imageUrl == null
+                || !(imageUrl.startsWith("https://") || imageUrl.startsWith("http://"))) return;
 
         new Thread(() -> {
             Bitmap bitmap = null;
@@ -189,11 +163,6 @@ public class CollectibleCardActivity extends AppCompatActivity {
                 photo.setVisibility(View.VISIBLE);
                 findViewById(R.id.ivPhotoIcon).setVisibility(View.GONE);
 
-                if (imageCredit != null && !imageCredit.isEmpty()) {
-                    TextView credit = findViewById(R.id.tvPlantNetImageCredit);
-                    credit.setText("Photo: " + imageCredit);
-                    credit.setVisibility(View.VISIBLE);
-                }
             });
         }).start();
     }

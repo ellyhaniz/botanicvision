@@ -56,7 +56,7 @@ public final class VisitorSheets {
         tvPreview.setText("\"I just unlocked the " + name + " (" + rarity + ") in PlantDex at the Singapore Botanic Gardens!\"");
 
         // Fills in the real "X/Y discovered" once the catalog's loaded, rather than a fake count.
-        CollectibleController.loadAll(new CollectibleController.Callback() {
+        CollectibleController.loadAll(activity, new CollectibleController.Callback() {
             @Override
             public void onSuccess(List<Collectible> all) {
                 int total = all.size();

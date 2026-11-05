@@ -109,7 +109,7 @@
                                 android:id="@+id/tvCardName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Tembusu Tree"
+                                android:text=""
                                 android:textColor="@color/plantdex_text_primary"
                                 android:textSize="17sp"
                                 android:textStyle="bold" />
@@ -118,7 +118,7 @@
                                 android:id="@+id/tvCardSubtitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Collectible #0087"
+                                android:text=""
                                 android:textColor="@color/plantdex_text_muted"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -146,7 +146,7 @@
 
                     <LinearLayout android:id="@+id/rowLinkedRecord" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Linked record" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvCardLinkedRecord" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#0231 Tembusu Tree" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvCardLinkedRecord" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout android:id="@+id/rowRarity" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal" android:visibility="gone">
@@ -156,12 +156,12 @@
 
                     <LinearLayout android:id="@+id/rowScientific" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Scientific name" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvCardScientific" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cyrtophyllum fragrans" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvCardScientific" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout android:id="@+id/rowUnlocked" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Unlocked" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvCardUnlocked" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="07 Dec 2026, 18:14:05" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvCardUnlocked" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout android:id="@+id/rowStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal" android:visibility="gone">
@@ -178,7 +178,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="A heritage tree native to Southeast Asia, recognisable by its dark fissured bark."
+                        android:text=""
                         android:textColor="@color/plantdex_text_muted"
                         android:textSize="12sp" />
                 </LinearLayout>

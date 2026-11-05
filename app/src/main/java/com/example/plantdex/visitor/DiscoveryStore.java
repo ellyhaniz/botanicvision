@@ -3,30 +3,34 @@ package com.example.plantdex.visitor;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.plantdex.common.Session;
+import com.example.plantdex.common.entity.Collectible;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 /**
- * Tracks which collectibles this device's visitor has discovered, and when.
- * Local-only for now (SharedPreferences) since there's no per-visitor
- * discovery table on the backend yet — see the note on GET /api/collectibles
- * in app.py. A real identification (#VS-06/07) doesn't feed into this yet
- * either; a handful of items are pre-seeded on first run so the inventory
- * isn't empty.
+ * Which collectibles the logged-in visitor has discovered, and when.
+ * The real record is on the server (CollectibleUnlock rows, written when a scan
+ * identifies the plant); this is the phone's copy of it, kept per visitor in
+ * SharedPreferences and refreshed every time the catalog loads (syncFromServer),
+ * so screens can check "discovered?" without waiting for the network.
  */
 public final class DiscoveryStore {
 
     private static final String PREFS = "plantdex_discoveries";
-    private static final String KEY_MAP = "discovered_map"; // JSON: {collectibleId: "dd MMM yyyy, HH:mm:ss"}
-    private static final String KEY_SEEDED = "seeded";
+    private static final String KEY_MAP = "discovered_map"; // + "_<userId>". JSON: {collectibleId: "dd MMM yyyy, HH:mm:ss"}
     private static final String TIMESTAMP_PATTERN = "dd MMM yyyy, HH:mm:ss";
 
     private static SimpleDateFormat timestampFormat() {
@@ -35,6 +39,41 @@ public final class DiscoveryStore {
 
     private DiscoveryStore() {}
 
+    /** Replaces this visitor's discoveries with what the server says (GET /api/collectibles?userId=). */
+    public static void syncFromServer(Context context, List<Collectible> catalog) {
+        JSONObject map = new JSONObject();
+        for (Collectible c : catalog) {
+            if (!c.isDiscoveredOnServer()) continue;
+            try {
+                map.put(c.getId(), displayTime(c.getUnlockedAt()));
+            } catch (JSONException ignored) {
+            }
+        }
+        save(context, map);
+    }
+
+    /** Marks a collectible discovered at the server's unlock time (ISO), e.g. right after a scan. */
+    public static void markDiscovered(Context context, String collectibleId, String unlockedAtIso) {
+        JSONObject map = map(context);
+        try {
+            map.put(collectibleId, displayTime(unlockedAtIso));
+        } catch (JSONException e) {
+            return;
+        }
+        save(context, map);
+    }
+
+    /** "2026-11-05T08:16:32.1+00:00" (server, UTC) -> "05 Nov 2026, 16:16:32" on this phone's clock. */
+    private static String displayTime(String iso) {
+        if (iso == null || iso.isEmpty()) return timestampFormat().format(new Date());
+        try {
+            Date date = Date.from(OffsetDateTime.parse(iso).toInstant());
+            return timestampFormat().format(date);
+        } catch (DateTimeParseException e) {
+            return timestampFormat().format(new Date());
+        }
+    }
+
     public static boolean isDiscovered(Context context, String collectibleId) {
         return map(context).has(collectibleId);
     }
@@ -42,19 +81,6 @@ public final class DiscoveryStore {
     /** Null if not discovered. */
     public static String getUnlockedAt(Context context, String collectibleId) {
         return map(context).optString(collectibleId, null);
-    }
-
-    /** Marks an item discovered right now, if it isn't already. */
-    public static void markDiscovered(Context context, String collectibleId) {
-        JSONObject map = map(context);
-        if (map.has(collectibleId)) return;
-        String now = timestampFormat().format(new Date());
-        try {
-            map.put(collectibleId, now);
-        } catch (JSONException e) {
-            return;
-        }
-        save(context, map);
     }
 
     public static Set<String> getDiscoveredIds(Context context) {
@@ -85,24 +111,13 @@ public final class DiscoveryStore {
         return bestId;
     }
 
-    /** Seeds a small starter set once per install, so the inventory has something in it on first run. */
-    public static void seedDefaultsIfFirstRun(Context context) {
-        SharedPreferences prefs = prefs(context);
-        if (prefs.getBoolean(KEY_SEEDED, false)) return;
-
-        JSONObject map = new JSONObject();
-        try {
-            map.put("0042", "05 Dec 2026, 14:13:09"); // Bandstand
-            map.put("0055", "03 Dec 2026, 11:10:05"); // Vanda Miss Joaquim
-            map.put("0087", "07 Dec 2026, 18:14:05"); // Tembusu Tree
-        } catch (JSONException ignored) {
-        }
-        save(context, map);
-        prefs.edit().putBoolean(KEY_SEEDED, true).apply();
+    /** Each visitor gets their own map, so logging in as someone else on the same phone starts clean. */
+    private static String key(Context context) {
+        return KEY_MAP + "_" + Session.getUserId(context);
     }
 
     private static JSONObject map(Context context) {
-        String raw = prefs(context).getString(KEY_MAP, null);
+        String raw = prefs(context).getString(key(context), null);
         if (raw == null) return new JSONObject();
         try {
             return new JSONObject(raw);
@@ -112,7 +127,7 @@ public final class DiscoveryStore {
     }
 
     private static void save(Context context, JSONObject map) {
-        prefs(context).edit().putString(KEY_MAP, map.toString()).apply();
+        prefs(context).edit().putString(key(context), map.toString()).apply();
     }
 
     private static SharedPreferences prefs(Context context) {

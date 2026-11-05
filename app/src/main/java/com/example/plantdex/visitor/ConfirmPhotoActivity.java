@@ -72,7 +72,7 @@ public class ConfirmPhotoActivity extends AppCompatActivity {
         capturedAt = DateFormat.format("dd MMM yyyy, HH:mm:ss", new Date()).toString();
         ((TextView) findViewById(R.id.tvCapturedAt)).setText(capturedAt);
 
-        CollectibleController.loadAll(new CollectibleController.Callback() {
+        CollectibleController.loadAll(this, new CollectibleController.Callback() {
             @Override
             public void onSuccess(List<Collectible> collectibles) {
                 catalog.clear();
@@ -122,34 +122,16 @@ public class ConfirmPhotoActivity extends AppCompatActivity {
                     if (displayName.isEmpty()) {
                         displayName = scientific.isEmpty() ? "Unknown plant" : scientific;
                     }
-                    //for adding identiflyed plant  to collectible storage
-                    JSONArray collectibleImages = top.optJSONArray("images");
-                    JSONObject collectiblePhoto = collectibleImages == null
-                            ? null : collectibleImages.optJSONObject(0);
-                    JSONObject collectibleUrls = collectiblePhoto == null
-                            ? null : collectiblePhoto.optJSONObject("url");
-
-                    String collectibleImageUrl = "";
-                    if (collectibleUrls != null) {
-                        collectibleImageUrl = collectibleUrls.optString("m", "");
-                        if (collectibleImageUrl.isEmpty()) {
-                            collectibleImageUrl = collectibleUrls.optString("s", "");
-                        }
-                    }
-
-                    String collectibleImageCredit = collectiblePhoto == null
-                            ? "" : collectiblePhoto.optString("citation", "");
-
-                    ScannedCollectibleStore.save(
-                            ConfirmPhotoActivity.this,
-                            displayName,
-                            scientific,
-                            top.optDouble("score", 0),
-                            capturedAt,
-                            collectibleImageUrl,
-                            collectibleImageCredit
-                    );
-
+                    // Our own model recognised something that has a collectible card: the
+                    // server has recorded the unlock, so show the card's details.
+                    JSONObject card = response.optJSONObject("collectible");
+                    if (card != null && !card.isNull("unlockedAt")) {
+                        DiscoveryStore.markDiscovered(ConfirmPhotoActivity.this,
+                                card.optString("id", ""), card.optString("unlockedAt"));
+                        intent = IdentificationResultActivity.matched(
+                                ConfirmPhotoActivity.this, Collectible.fromJson(card), capturedAt,
+                                photoUri.toString(), response.optBoolean("newlyUnlocked", false));
+                    } else
                     intent = IdentificationResultActivity.suggestion(
                             ConfirmPhotoActivity.this,
                             displayName,

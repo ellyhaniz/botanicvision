@@ -95,17 +95,15 @@ class CollectibleTests(ApiTestCase):
         items = self.client.get("/api/collectibles").json()["collectibles"]
         self.assertEqual(items[0]["id"], "0042")
 
-    def test_published_records_become_collectibles(self):
+    def test_records_without_a_collectible_are_not_cards(self):
+        # The catalog comes from the Collectible table (see test_scan_collectibles.py); a
+        # researcher record only becomes a card once a System Admin creates a collectible for it.
         image = SimpleUploadedFile("t.gif", b"GIF89a\x01\x00\x01\x00\x00\x00\x00;", content_type="image/gif")
         BotanicalRecord.objects.create(common_name="Tembusu", scientific_name="Cyrtophyllum fragrans",
                                        family="Gentianaceae", image=image,
                                        identification_features="Dark bark", fun_fact="On the $5 note")
-        BotanicalRecord.objects.create(common_name="Draft Plant", scientific_name="X", family="Y", image=image,
-                                       identification_features="-", fun_fact="-", status=BotanicalRecord.DRAFT)
         items = self.client.get("/api/collectibles").json()["collectibles"]
-        self.assertEqual([c["name"] for c in items], ["Tembusu"])
-        self.assertEqual(items[0]["category"], "Flora")
-        self.assertEqual(items[0]["scientificName"], "Cyrtophyllum fragrans")
+        self.assertNotIn("Tembusu", [c["name"] for c in items])
 
 
 class IdentifyTests(ApiTestCase):

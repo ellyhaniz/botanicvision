@@ -116,9 +116,9 @@ public final class ApiClient {
 
     // ---------------------------------------------------------- collectibles --
 
-    /** The shared collectible catalog (see #VS-09/10/11) — currently a static list on the backend. */
-    public static void getCollectibles(Callback callback) {
-        sendJson("GET", "/api/collectibles", null, callback);
+    /** The collectible catalog (#VS-09/10/11), each card marked discovered or not for this visitor. */
+    public static void getCollectibles(int userId, Callback callback) {
+        sendJson("GET", "/api/collectibles?userId=" + userId, null, callback);
     }
 
     //faster identification method
@@ -170,6 +170,12 @@ public final class ApiClient {
                 conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
                 try (OutputStream output = conn.getOutputStream()) {
+                    // who is scanning, so the server can unlock the collectible for them
+                    String userField = "--" + boundary + "\r\n"
+                            + "Content-Disposition: form-data; name=\"userId\"\r\n\r\n"
+                            + Session.getUserId(context) + "\r\n";
+                    output.write(userField.getBytes(StandardCharsets.UTF_8));
+
                     String header = "--" + boundary + "\r\n"
                             + "Content-Disposition: form-data; name=\"image\"; filename=\"plant.jpg\"\r\n"
                             + "Content-Type: image/jpeg\r\n\r\n";

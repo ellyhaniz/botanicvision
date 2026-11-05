@@ -83,7 +83,11 @@ WSGI_APPLICATION = 'plantdex_portal.wsgi.application'
 # To use Microsoft SQL Server instead, set DB_ENGINE=mssql and the DB_* variables
 # described in INSTALLATION.md (needs: pip install -r requirements-mssql.txt).
 if os.environ.get("DB_ENGINE", "sqlite") == "mssql":
-    _options = {"driver": os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server")}
+    _options = {"driver": os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
+                # Login timeout in seconds. A paused (serverless) Azure database takes up to a
+                # minute to wake, longer than the driver's default 15 s, so the first command after
+                # a break used to fail with "Server is not found or not accessible".
+                "connection_timeout": int(os.environ.get("DB_LOGIN_TIMEOUT", "90"))}
     _extra = ["TrustServerCertificate=yes"]
     if os.environ.get("DB_TRUSTED") == "1":      # Windows authentication
         _extra.append("Trusted_Connection=yes")

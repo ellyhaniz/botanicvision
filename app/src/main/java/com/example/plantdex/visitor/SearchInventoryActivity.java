@@ -43,7 +43,6 @@ public class SearchInventoryActivity extends AppCompatActivity {
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
         ((TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(Roles.VISITOR));
 
-        DiscoveryStore.seedDefaultsIfFirstRun(this);
 
         resultsContainer = findViewById(R.id.resultsContainer);
         tvResultCount = findViewById(R.id.tvResultCount);
@@ -79,7 +78,7 @@ public class SearchInventoryActivity extends AppCompatActivity {
     }
 
     private void loadCollectibles() {
-        CollectibleController.loadAll(new CollectibleController.Callback() {
+        CollectibleController.loadAll(this, new CollectibleController.Callback() {
             @Override
             public void onSuccess(List<Collectible> collectibles) {
                 allCollectibles.clear();

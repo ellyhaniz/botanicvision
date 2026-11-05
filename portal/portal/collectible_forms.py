@@ -21,15 +21,19 @@ class CollectibleForm(RecordForm):
 
     class Meta:
         model = Collectible
-        fields = ["name", "category", "rarity", "description", "image", "status"]
+        fields = ["name", "category", "rarity", "description", "image", "status", "model_label"]
         labels = {"name": "Collectible name", "category": "Category", "rarity": "Rarity level",
-                  "description": "Description", "image": "Card image"}
+                  "description": "Description", "image": "Card image",
+                  "model_label": "Scan label (optional)"}
         widgets = {
             "description": LineBreakTextarea(attrs={"rows": 4}),
             "image": forms.FileInput(attrs={"accept": "image/jpeg,image/png,image/webp"}),
         }
         help_texts = {
             "image": "JPG, PNG or WebP, up to 5 MB. When editing, leave empty to keep the current image.",
+            "model_label": "The PlantDex model's class name for this plant or structure, exactly as in "
+                           "labels.txt (e.g. tanglin_gate). Visitors unlock the card by scanning it. "
+                           "Leave empty if the model does not recognise it yet.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -41,7 +45,7 @@ class CollectibleForm(RecordForm):
             kind = "b" if self.instance.botanical_record_id else "a"
             self.initial["linked_record"] = f"{kind}:{self.instance.linked_record.pk}"
         self.order_fields(["name", "linked_record", "category", "rarity",
-                           "description", "image", "status"])
+                           "description", "image", "status", "model_label"])
 
     # ---- the drop-down ----------------------------------------------------
     def _record_choices(self):
@@ -89,6 +93,14 @@ class CollectibleForm(RecordForm):
 
     def clean_name(self):
         return tidy(self.cleaned_data["name"])
+
+    def clean_model_label(self):
+        label = tidy(self.cleaned_data.get("model_label") or "").lower()
+        if label:
+            taken = Collectible.objects.filter(model_label=label).exclude(pk=self.instance.pk).first()
+            if taken:
+                raise forms.ValidationError(f"The collectible '{taken.name}' already uses this scan label.")
+        return label
 
     def clean_description(self):
         return tidy_block(self.cleaned_data["description"])

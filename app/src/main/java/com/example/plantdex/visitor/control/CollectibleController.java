@@ -1,7 +1,11 @@
 package com.example.plantdex.visitor.control;
 
+import android.content.Context;
+
 import com.example.plantdex.common.ApiClient;
+import com.example.plantdex.common.Session;
 import com.example.plantdex.common.entity.Collectible;
+import com.example.plantdex.visitor.DiscoveryStore;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,8 +23,10 @@ public final class CollectibleController {
         void onError(String message);
     }
 
-    public static void loadAll(Callback callback) {
-        ApiClient.getCollectibles(new ApiClient.Callback() {
+    /** Loads the catalog for the logged-in visitor and refreshes DiscoveryStore from it. */
+    public static void loadAll(Context context, Callback callback) {
+        Context app = context.getApplicationContext();
+        ApiClient.getCollectibles(Session.getUserId(app), new ApiClient.Callback() {
             @Override
             public void onSuccess(JSONObject response) {
                 JSONArray array = response.optJSONArray("collectibles");
@@ -31,6 +37,7 @@ public final class CollectibleController {
                         if (item != null) collectibles.add(Collectible.fromJson(item));
                     }
                 }
+                DiscoveryStore.syncFromServer(app, collectibles);
                 callback.onSuccess(collectibles);
             }
 

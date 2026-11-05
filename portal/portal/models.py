@@ -240,6 +240,11 @@ class Collectible(models.Model):
     rarity = models.CharField(max_length=10, choices=RARITIES, default=COMMON, db_index=True)
     status = models.CharField(max_length=10, choices=STATUSES, default=PUBLISHED, db_index=True)
 
+    # The class name the PlantDex image model outputs for this plant or structure
+    # (a line of ml/labels.txt, e.g. "tanglin_gate"). A confident scan with this label
+    # unlocks the card. Empty = this card can't be unlocked by scanning yet.
+    model_label = models.CharField(max_length=60, blank=True, db_index=True)
+
     # Exactly ONE of these is set (enforced below). OneToOne means a record can have at
     # most one collectible, which is the "duplicate collectible" rule of SA-04 / SA-06.
     # PROTECT stops a linked record from being hard-deleted by accident.
@@ -260,6 +265,9 @@ class Collectible(models.Model):
                 condition=(Q(botanical_record__isnull=False, architecture_record__isnull=True)
                            | Q(botanical_record__isnull=True, architecture_record__isnull=False)),
                 name="collectible_links_exactly_one_record"),
+            # "> ''" rather than "not empty": SQL Server's filtered indexes don't allow NOT
+            models.UniqueConstraint(fields=["model_label"], condition=Q(model_label__gt=""),
+                                    name="one_collectible_per_model_label"),
         ]
 
     def __str__(self):

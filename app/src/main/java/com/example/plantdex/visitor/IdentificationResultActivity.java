@@ -41,6 +41,7 @@ public class IdentificationResultActivity extends AppCompatActivity {
     private static final String EXTRA_PLANTNET_SUGGESTION = "extra_plantnet_suggestion";
     private static final String EXTRA_PHOTO_URI = "extra_photo_uri";
     private static final String EXTRA_SCORE = "extra_score";
+    private static final String EXTRA_NEWLY_UNLOCKED = "extra_newly_unlocked";
 
     public static Intent matched(Context context, Collectible c, String submittedAt) {
         Intent intent = new Intent(context, IdentificationResultActivity.class);
@@ -54,8 +55,15 @@ public class IdentificationResultActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_FEATURE, c.getFeature());
         intent.putExtra(EXTRA_FUNFACT, c.getFunFact());
         return intent;
+    }
 
-
+    /** A scan that unlocked (or had already unlocked) this collectible. */
+    public static Intent matched(Context context, Collectible c, String submittedAt,
+                                 String photoUri, boolean newlyUnlocked) {
+        Intent intent = matched(context, c, submittedAt);
+        intent.putExtra(EXTRA_PHOTO_URI, photoUri);
+        intent.putExtra(EXTRA_NEWLY_UNLOCKED, newlyUnlocked);
+        return intent;
     }
 
     public static Intent noMatch(Context context, String submittedAt, String photoUri) {
@@ -114,8 +122,10 @@ public class IdentificationResultActivity extends AppCompatActivity {
             String feature = getIntent().getStringExtra(EXTRA_FEATURE);
             String funFact = getIntent().getStringExtra(EXTRA_FUNFACT);
 
-            ((TextView) findViewById(R.id.tvUnlockedBanner)).setText(
-                    "✓ New collectible unlocked · " + name + " · " + rarity);
+            boolean isNew = getIntent().getBooleanExtra(EXTRA_NEWLY_UNLOCKED, true);
+            ((TextView) findViewById(R.id.tvUnlockedBanner)).setText(isNew
+                    ? "✓ New collectible unlocked · " + name + " · " + rarity
+                    : "✓ Already in your inventory · " + name);
             ((TextView) findViewById(R.id.tvResultName)).setText(name);
             ((TextView) findViewById(R.id.tvResultRecord)).setText("Collectible #" + id + " · " + category);
             ((TextView) findViewById(R.id.tvResultObjectType)).setText(category);

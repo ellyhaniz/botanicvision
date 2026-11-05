@@ -103,26 +103,38 @@
                 android:progressBackgroundTint="@color/plantdex_progress_track" />
 
             <LinearLayout
-                android:id="@+id/row1"
+                android:id="@+id/gridRows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/groupEmpty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:orientation="horizontal" />
-
-            <LinearLayout
-                android:id="@+id/row2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal" />
-            <LinearLayout
-                android:id="@+id/scannedRows"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:visibility="gone" />
+                android:padding="26dp"
+                android:visibility="gone">
 
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_leaf"
+                    android:contentDescription="No collectibles yet" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center"
+                    android:text="No collectibles yet. Scan a plant or landmark in the gardens to unlock its card."
+                    android:textColor="@color/plantdex_text_primary"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/groupNoResults"

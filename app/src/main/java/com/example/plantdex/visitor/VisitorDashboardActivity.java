@@ -24,7 +24,6 @@ public class VisitorDashboardActivity extends AppCompatActivity {
         // Also wires the header's btnProfile (present directly in this layout).
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
 
-        DiscoveryStore.seedDefaultsIfFirstRun(this);
 
         LinearLayout cardIdentify = findViewById(R.id.cardIdentify);
         cardIdentify.setOnClickListener(v -> startActivity(new Intent(this, CapturePhotoActivity.class)));
@@ -38,7 +37,7 @@ public class VisitorDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(this, CollectibleInventoryActivity.class));
                 return;
             }
-            CollectibleController.loadAll(new CollectibleController.Callback() {
+            CollectibleController.loadAll(this, new CollectibleController.Callback() {
                 @Override
                 public void onSuccess(List<Collectible> collectibles) {
                     for (Collectible c : collectibles) {
