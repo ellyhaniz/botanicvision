@@ -38,7 +38,6 @@ public class EditMyAccountActivity extends AppCompatActivity {
         if (role == null) role = Roles.VISITOR;
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), role);
-        ((TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(role));
 
         // Username field is disabled in the layout itself (android:enabled="false") —
         // it's only here so the field grid reads the same as the admin's Edit Account screen.

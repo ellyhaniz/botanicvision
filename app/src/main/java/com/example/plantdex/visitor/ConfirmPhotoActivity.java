@@ -67,7 +67,6 @@ public class ConfirmPhotoActivity extends AppCompatActivity {
         //++++++++++++
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
-        ((TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(Roles.VISITOR));
 
         capturedAt = DateFormat.format("dd MMM yyyy, HH:mm:ss", new Date()).toString();
         ((TextView) findViewById(R.id.tvCapturedAt)).setText(capturedAt);

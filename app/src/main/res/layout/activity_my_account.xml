@@ -102,11 +102,11 @@
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="User ID" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvAccountUserId" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#U-10428" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvAccountUserId" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Email" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvAccountEmail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="jtan042@mail.com" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvAccountEmail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Profile type" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
@@ -114,7 +114,7 @@
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Member since" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvAccountMemberSince" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="14 Sep 2026" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvAccountMemberSince" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
@@ -133,7 +133,7 @@
                     android:orientation="horizontal">
                     <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                         android:text="Discovery Progress" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="View More" android:textColor="@color/white" android:textSize="12sp" android:textStyle="bold" />
+                    <TextView android:id="@+id/tvAccountViewMore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="View More" android:textColor="@color/white" android:textSize="12sp" android:textStyle="bold" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -146,15 +146,15 @@
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                             <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Collectibles unlocked" android:textColor="@color/plantdex_text_primary" android:textSize="13sp" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="18 / 60" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
+                            <TextView android:id="@+id/tvAccountUnlocked" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                         </LinearLayout>
-                        <ProgressBar style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="7dp" android:layout_marginTop="8dp"
-                            android:max="60" android:progress="18" android:progressTint="@color/plantdex_bg" android:progressBackgroundTint="@color/plantdex_progress_track" />
+                        <ProgressBar android:id="@+id/progressAccountUnlocked" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="7dp" android:layout_marginTop="8dp"
+                            android:max="1" android:progress="0" android:progressTint="@color/plantdex_bg" android:progressBackgroundTint="@color/plantdex_progress_track" />
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal">
                             <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Handbook sync" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                                 android:background="@drawable/bg_pill" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="3dp" android:paddingBottom="3dp"
-                                android:text="Synced" android:textColor="@color/plantdex_success_text" android:textSize="11sp" />
+                                android:id="@+id/tvAccountSync" android:text="Syncing…" android:textColor="@color/plantdex_success_text" android:textSize="11sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </FrameLayout>

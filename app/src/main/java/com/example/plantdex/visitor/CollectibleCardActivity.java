@@ -64,7 +64,6 @@ public class CollectibleCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collectible_card);
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
-        ((TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(Roles.VISITOR));
 
         boolean discovered = getIntent().getBooleanExtra(EXTRA_DISCOVERED, true);
 

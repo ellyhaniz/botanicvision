@@ -62,6 +62,31 @@ public final class BottomNavHelper {
                 activity.startActivity(intent);
             });
         }
+
+        showUsernameInHeader(activity);
+    }
+
+    /**
+     * Every screen's header used to say "Visitor #ID" / "Researcher #ID". Show the logged-in
+     * username there instead. Some headers are the shared header_role.xml and some are written
+     * out in their own layout, so this replaces that placeholder text wherever it appears.
+     */
+    private static void showUsernameInHeader(AppCompatActivity activity) {
+        String username = Session.getUsername(activity);
+        if (username == null || username.isEmpty()) return;
+        java.util.Set<String> placeholders = new java.util.HashSet<>(java.util.Arrays.asList(
+                activity.getString(R.string.visitor_id), activity.getString(R.string.researcher_id), "Role #ID"));
+        replaceText(activity.findViewById(android.R.id.content), placeholders, username);
+    }
+
+    private static void replaceText(View view, java.util.Set<String> placeholders, String text) {
+        if (view instanceof android.widget.TextView && !(view instanceof android.widget.Button)) {
+            android.widget.TextView tv = (android.widget.TextView) view;
+            if (placeholders.contains(tv.getText().toString())) tv.setText(text);
+        } else if (view instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group = (android.view.ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) replaceText(group.getChildAt(i), placeholders, text);
+        }
     }
 
     /** Shows the "are you sure?" confirmation, then actually logs the account out once confirmed. */

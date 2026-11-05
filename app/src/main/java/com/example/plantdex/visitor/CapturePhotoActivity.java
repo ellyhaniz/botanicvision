@@ -53,7 +53,6 @@ public class CapturePhotoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_capture_photo);
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
-        ((android.widget.TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(Roles.VISITOR));
 
         ImageButton btnShutter = findViewById(R.id.btnShutter);
         btnShutter.setOnClickListener(v -> capturePhoto(btnShutter));

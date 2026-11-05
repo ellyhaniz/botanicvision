@@ -95,7 +95,6 @@ public class IdentificationResultActivity extends AppCompatActivity {
         showSubmittedPhoto();
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
-        ((TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(Roles.VISITOR));
 
         if (getIntent().getBooleanExtra(EXTRA_PLANTNET_SUGGESTION, false)) {
             showSuggestion();

@@ -41,7 +41,6 @@ public class SearchInventoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_inventory);
 
         BottomNavHelper.setup(this, findViewById(R.id.navContainer), Roles.VISITOR);
-        ((TextView) findViewById(R.id.header).findViewById(R.id.tvRoleId)).setText(Roles.displayId(Roles.VISITOR));
 
 
         resultsContainer = findViewById(R.id.resultsContainer);
