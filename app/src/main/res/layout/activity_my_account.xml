@@ -109,10 +109,6 @@
                         <TextView android:id="@+id/tvAccountEmail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Profile type" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvAccountProfileType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Visitor" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
-                    </LinearLayout>
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Member since" android:textColor="@color/plantdex_text_muted" android:textSize="13sp" />
                         <TextView android:id="@+id/tvAccountMemberSince" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/plantdex_text_primary" android:textStyle="bold" android:textSize="13sp" />
                     </LinearLayout>

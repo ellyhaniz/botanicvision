@@ -45,7 +45,6 @@ public class MyAccountActivity extends AppCompatActivity {
         TextView tvRole = findViewById(R.id.tvAccountRole);
         TextView tvUserId = findViewById(R.id.tvAccountUserId);
         TextView tvEmail = findViewById(R.id.tvAccountEmail);
-        TextView tvProfileType = findViewById(R.id.tvAccountProfileType);
         TextView tvMemberSince = findViewById(R.id.tvAccountMemberSince);
 
         String username = Session.getUsername(this);
@@ -58,7 +57,6 @@ public class MyAccountActivity extends AppCompatActivity {
         tvRole.setText(roleDisplay);
         tvUserId.setText(userId > 0 ? "#U-" + userId : "—");
         tvEmail.setText(email != null && !email.isEmpty() ? email : "—");
-        tvProfileType.setText(roleDisplay);
         tvMemberSince.setText(memberSince != null && !memberSince.isEmpty() ? memberSince : "—");
 
         boolean visitor = Roles.VISITOR.equals(role);

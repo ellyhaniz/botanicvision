@@ -121,7 +121,11 @@ public final class BottomNavHelper {
         if (view instanceof android.widget.TextView && !(view instanceof android.widget.Button)) {
             android.widget.TextView tv = (android.widget.TextView) view;
             String text = tv.getText().toString();
-            if (username != null && placeholders.contains(text)) tv.setText(username);
+            if (username != null && placeholders.contains(text)) {
+                tv.setText(username);
+                tv.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 20);
+                tv.setTypeface(tv.getTypeface(), android.graphics.Typeface.BOLD);
+            }
             else if (subtitle.equals(text)) tv.setVisibility(View.GONE);
         } else if (view instanceof android.view.ViewGroup) {
             android.view.ViewGroup group = (android.view.ViewGroup) view;
