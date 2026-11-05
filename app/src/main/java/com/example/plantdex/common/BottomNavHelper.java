@@ -12,7 +12,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.plantdex.R;
 import com.example.plantdex.common.boundary.MyAccountActivity;
 import com.example.plantdex.common.control.AuthController;
+import com.example.plantdex.common.boundary.EditMyAccountActivity;
+import com.example.plantdex.researcher.CreateRecordActivity;
+import com.example.plantdex.researcher.RecordDetailActivity;
+import com.example.plantdex.researcher.RecordsListActivity;
+import com.example.plantdex.researcher.ResearcherDashboardActivity;
 import com.example.plantdex.visitor.CapturePhotoActivity;
+import com.example.plantdex.visitor.CollectibleCardActivity;
+import com.example.plantdex.visitor.CollectibleInventoryActivity;
+import com.example.plantdex.visitor.ConfirmPhotoActivity;
+import com.example.plantdex.visitor.IdentificationResultActivity;
+import com.example.plantdex.visitor.SearchInventoryActivity;
+import com.example.plantdex.visitor.VisitorDashboardActivity;
 
 /**
  * Inflates and wires the bottom navigation bar shared across roles
@@ -63,29 +74,60 @@ public final class BottomNavHelper {
             });
         }
 
-        showUsernameInHeader(activity);
+        // Shade the tab of the section this screen belongs to.
+        ImageButton current = null;
+        if (isHomeSection(activity)) current = navHome;
+        else if (activity instanceof MyAccountActivity || activity instanceof EditMyAccountActivity) current = navProfile;
+        else if (isIdentifySection(activity)) current = navCamera;
+        if (current != null) {
+            current.setBackgroundResource(R.drawable.bg_nav_selected);
+            current.setColorFilter(activity.getColor(R.color.plantdex_bg));
+            current.setSelected(true);
+        }
+
+        tidyHeader(activity);
+    }
+
+    /** Dashboards, plus the collection / record screens reached from them. */
+    private static boolean isHomeSection(AppCompatActivity a) {
+        return a instanceof VisitorDashboardActivity || a instanceof CollectibleInventoryActivity
+                || a instanceof SearchInventoryActivity || a instanceof CollectibleCardActivity
+                || a instanceof ResearcherDashboardActivity || a instanceof RecordsListActivity
+                || a instanceof RecordDetailActivity || a instanceof CreateRecordActivity;
+    }
+
+    /** Taking a photo, confirming it, and the identification result. */
+    private static boolean isIdentifySection(AppCompatActivity a) {
+        return a instanceof CapturePhotoActivity || a instanceof ConfirmPhotoActivity
+                || a instanceof IdentificationResultActivity;
     }
 
     /**
-     * Every screen's header used to say "Visitor #ID" / "Researcher #ID". Show the logged-in
-     * username there instead. Some headers are the shared header_role.xml and some are written
-     * out in their own layout, so this replaces that placeholder text wherever it appears.
+     * Every screen's header used to say "Visitor #ID" / "Researcher #ID" over "PlantDex
+     * Management". Show the logged-in username instead, without the subtitle. Some headers are
+     * the shared header_role.xml and some are written out in their own layout, so this finds
+     * that placeholder text wherever it appears.
      */
-    private static void showUsernameInHeader(AppCompatActivity activity) {
+    private static void tidyHeader(AppCompatActivity activity) {
         String username = Session.getUsername(activity);
-        if (username == null || username.isEmpty()) return;
         java.util.Set<String> placeholders = new java.util.HashSet<>(java.util.Arrays.asList(
                 activity.getString(R.string.visitor_id), activity.getString(R.string.researcher_id), "Role #ID"));
-        replaceText(activity.findViewById(android.R.id.content), placeholders, username);
+        tidyHeader(activity.findViewById(android.R.id.content), placeholders,
+                username == null || username.isEmpty() ? null : username,
+                activity.getString(R.string.plantdex_management));
     }
 
-    private static void replaceText(View view, java.util.Set<String> placeholders, String text) {
+    private static void tidyHeader(View view, java.util.Set<String> placeholders, String username, String subtitle) {
         if (view instanceof android.widget.TextView && !(view instanceof android.widget.Button)) {
             android.widget.TextView tv = (android.widget.TextView) view;
-            if (placeholders.contains(tv.getText().toString())) tv.setText(text);
+            String text = tv.getText().toString();
+            if (username != null && placeholders.contains(text)) tv.setText(username);
+            else if (subtitle.equals(text)) tv.setVisibility(View.GONE);
         } else if (view instanceof android.view.ViewGroup) {
             android.view.ViewGroup group = (android.view.ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) replaceText(group.getChildAt(i), placeholders, text);
+            for (int i = 0; i < group.getChildCount(); i++) {
+                tidyHeader(group.getChildAt(i), placeholders, username, subtitle);
+            }
         }
     }
 
