@@ -63,20 +63,17 @@ public final class AuthController {
 
     /** Records the sign-out in the audit log, then clears the local session either way. */
     public static void logout(Context context, int userId, SimpleCallback callback) {
+        // Log out on the phone straight away. Telling the server (for the audit log) can
+        // take up to a minute when the database is waking up, so it happens in the
+        // background and its result doesn't hold the user on this screen.
         ApiClient.logout(userId, new ApiClient.Callback() {
             @Override
-            public void onSuccess(org.json.JSONObject response) {
-                Session.clear(context);
-                callback.onSuccess();
-            }
+            public void onSuccess(org.json.JSONObject response) {}
 
             @Override
-            public void onError(String message) {
-                // Still log the user out locally even if the audit-log call failed —
-                // don't strand them on a screen they can't get back to.
-                Session.clear(context);
-                callback.onSuccess();
-            }
+            public void onError(String message) {}
         });
+        Session.clear(context);
+        callback.onSuccess();
     }
 }
