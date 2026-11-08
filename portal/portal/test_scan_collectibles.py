@@ -112,6 +112,24 @@ class SeedScanCollectiblesTests(CollectibleTestCase):
         call_command("seed_scan_collectibles", stdout=mock.Mock())
         self.assertEqual(Collectible.objects.count(), 13)
 
+    def test_no_card_has_placeholder_text(self):
+        call_command("seed_scan_collectibles", stdout=mock.Mock())
+        for item in self.client.get("/api/collectibles").json()["collectibles"]:
+            self.assertNotIn("SAMPLE", f"{item['description']} {item['feature']} {item['funFact']}", item["name"])
+
+    def test_fix_card_facts_replaces_placeholders_on_existing_cards(self):
+        old = self.collectible(name="Swing Me Mama", record=self.architecture("Swing Me Mama"),
+                               category=self.arch_cat, model_label="swing_me_mama")
+        old.architecture_record.fun_fact = "SAMPLE: replace with a verified fun fact."
+        old.architecture_record.save()
+        call_command("fix_card_facts", stdout=mock.Mock())
+        call_command("fix_card_facts", stdout=mock.Mock())   # safe to run twice
+        old.refresh_from_db()
+        old.architecture_record.refresh_from_db()
+        self.assertIn("Dominic Benhura", old.description)
+        self.assertIn("Rotary Clubs", old.architecture_record.fun_fact)
+        self.assertEqual(old.architecture_record.location, "Near Swan Lake")
+
     def test_reuses_existing_collectible_for_same_record(self):
         existing = self.collectible(record=self.architecture("Tanglin Gate"), name="Main Gate",
                                     category=self.arch_cat)

@@ -11,8 +11,21 @@ from portal.models import ArchitectureRecord, BotanicalRecord, Collectible, Coll
 
 from .seed_records import placeholder
 
+# Checked against NParks, PublicArtSG and the National Heritage Board (Nov 2026).
+# fix_card_facts uses these too, to correct cards already in the database.
+VANDA_FACT = ("Singapore's national flower, Vanda Miss Joaquim, is a Vanda hybrid bred by Agnes "
+              "Joaquim in 1893. It was chosen in 1981, making Singapore the only country whose "
+              "national flower is a hybrid.")
+SWAN_LAKE_FACT = ("The lake is named after a pair of mute swans brought over from Amsterdam. The bronze "
+                  "sculpture in the middle, Flight of Swans, was added in 2006.")
+SWING_ME_MAMA_DESCRIPTION = ("A stone sculpture of a mother swinging her child, by Zimbabwean artist "
+                             "Dominic Benhura.")
+SWING_ME_MAMA_FACT = ("A gift from the Rotary Clubs of Singapore, it stood in Fort Canning Park before "
+                      "moving to the Gardens. Benhura later gave a work of the same name to Nelson Mandela.")
+# The card shows "<style>, <built>", e.g. "Gateway, main entrance since 1859".
+TANGLIN_GATE_STYLE, TANGLIN_GATE_BUILT = "Gateway", "main entrance since 1859"
+
 # One collectible per class of the PlantDex image model (portal/ml/labels.txt).
-# Names and scientific names are real; text marked SAMPLE should be checked by a Researcher.
 PLANTS = {
     "allamanda_cathartica": ("Apocynaceae", Collectible.COMMON,
         "Large yellow trumpet-shaped flowers with five overlapping petals.\n"
@@ -47,16 +60,15 @@ PLANTS = {
         "The white 'petal' is not a petal at all: it is a modified leaf called a spathe."),
     "vanda_hybrid": ("Orchidaceae", Collectible.RARE,
         "Flat, rounded flowers, often with chequered patterning.\nThick strap-shaped leaves in two rows.",
-        "SAMPLE: replace with a verified fun fact."),
+        VANDA_FACT),
 }
 STRUCTURES = {
     "swan_lake": ("Tanglin Core", "Ornamental lake", "1866", Collectible.COMMON,
         "The oldest ornamental lake in the Gardens, with a bronze sculpture of swans in flight.",
-        "SAMPLE: replace with a verified fun fact."),
-    "swing_me_mama": ("Near Symphony Lake", "Sculpture", "SAMPLE: to be verified", Collectible.RARE,
-        "A sculpture of a mother playing with her child, set among the shrubs.",
-        "SAMPLE: replace with a verified fun fact."),
-    "tanglin_gate": ("Junction of Holland Road and Napier Road", "Contemporary", "SAMPLE: to be verified",
+        SWAN_LAKE_FACT),
+    "swing_me_mama": ("Near Swan Lake", "Sculpture", "1999", Collectible.RARE,
+        SWING_ME_MAMA_DESCRIPTION, SWING_ME_MAMA_FACT),
+    "tanglin_gate": ("Junction of Holland Road and Napier Road", TANGLIN_GATE_STYLE, TANGLIN_GATE_BUILT,
         Collectible.COMMON,
         "The Gardens' main entrance: white pillars and cut-metal gates patterned with leaves.",
         "The Gardens became Singapore's first UNESCO World Heritage Site in 2015."),
