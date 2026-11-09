@@ -21,6 +21,9 @@ MODEL_DIR = Path(os.environ.get("PLANTDEX_MODEL_DIR", settings.BASE_DIR / "ml"))
 MODEL_FILE = MODEL_DIR / "plantdex_model.tflite"
 LABELS_FILE = MODEL_DIR / "labels.txt"
 IMG_SIZE = 224
+# The model's "none of these" class: photos of things outside the collection. A scan the
+# model puts here is treated as no match, however sure it is.
+NOT_IN_COLLECTION = "other"
 
 # class folder name -> what the app shows. "scientific" is empty for landmarks,
 # which hides the scientific-name row on the result screen.

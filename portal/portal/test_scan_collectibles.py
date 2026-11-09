@@ -95,6 +95,13 @@ class ScanUnlockTests(CollectibleTestCase):
             self.scan(score=0.3, userId=self.visitor.pk)
         self.assertFalse(CollectibleUnlock.objects.exists())
 
+    def test_not_in_collection_scan_is_no_match(self):
+        with mock.patch.dict("os.environ", {}, clear=True):   # no Pl@ntNet key to fall back on
+            r = self.scan(label="other", score=0.99, userId=self.visitor.pk)
+        self.assertFalse(r["matched"])
+        self.assertEqual(r["results"], [])
+        self.assertFalse(CollectibleUnlock.objects.exists())
+
     # --- System Admin form --------------------------------------------------
     def test_scan_label_must_be_unique(self):
         record = self.botanical("Rain Tree", "Samanea saman")

@@ -9,3 +9,6 @@ After retraining (`train.ipynb` in the FYP training folder), copy **both** new f
 here and restart the portal. They must come from the same training run.
 A class name that is new in `labels.txt` should also get a display name in
 `CLASS_INFO` in `portal/classifier.py` (otherwise its folder name is shown).
+
+The class `other` ("not in the collection") is special: a scan the model puts there
+is treated as no match and unlocks nothing (`NOT_IN_COLLECTION` in `classifier.py`).

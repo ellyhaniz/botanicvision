@@ -32,7 +32,8 @@ ROLE_CODES = {"Researcher": "RESEARCHER", "User Admin": "USER ADMIN", "System Ad
 
 # Below this top-class probability our model's answer is not trusted (it always picks
 # one of its classes, even for a photo of something it was never trained on).
-MIN_MODEL_CONFIDENCE = float(os.environ.get("PLANTDEX_MIN_CONFIDENCE", "0.6"))
+# 0.6 let a bouquet of pink baby's breath through as Vanda (78%); real scans score 0.9+.
+MIN_MODEL_CONFIDENCE = float(os.environ.get("PLANTDEX_MIN_CONFIDENCE", "0.85"))
 
 
 def _body(request):
@@ -303,7 +304,8 @@ def identify(request):
         except Exception:
             logger.exception("PlantDex model failed; falling back to Pl@ntNet")
         photo.seek(0)
-    if model_guess and model_guess["score"] >= MIN_MODEL_CONFIDENCE:
+    if (model_guess and model_guess["score"] >= MIN_MODEL_CONFIDENCE
+            and model_guess["label"] != classifier.NOT_IN_COLLECTION):
         card, newly_unlocked = _unlock_for_scan(request, model_guess["label"])
         return JsonResponse({"source": "plantdex", "results": [model_guess],
                              "collectible": card, "newlyUnlocked": newly_unlocked})

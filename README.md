@@ -30,7 +30,7 @@ FYP-26-S3-15 · CSIT321
                                 └─▶ PlantDex image model (TensorFlow Lite)
 
 - The app talks only to the portal's API. It never connects to the database directly.
-- A photo is sent to `/api/identify`. If the model is confident (≥ 60%) and the plant or
+- A photo is sent to `/api/identify`. If the model is confident (≥ 85%) and the plant or
   landmark has a card, that card is unlocked for the visitor.
 - Collectibles, unlocks and accounts are stored in the shared Azure SQL database.
 
