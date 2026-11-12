@@ -168,7 +168,7 @@ class BotanicalRecord(RecordBase):
     common_name = models.CharField(max_length=100, db_index=True)
     scientific_name = models.CharField(max_length=150, db_index=True)
     family = models.CharField(max_length=100, db_index=True)
-    image = models.ImageField(upload_to="botanical/%Y/%m/")
+    image = models.ImageField(upload_to="botanical/%Y/%m/", storage=database_storage)
     identification_features = models.TextField()
     fun_fact = models.TextField()
 
@@ -181,7 +181,7 @@ class BotanicalRecord(RecordBase):
 
 class ArchitectureRecord(RecordBase):
     name = models.CharField(max_length=150, db_index=True)
-    image = models.ImageField(upload_to="architecture/%Y/%m/")
+    image = models.ImageField(upload_to="architecture/%Y/%m/", storage=database_storage)
     location = models.CharField(max_length=150, db_index=True)
     architectural_style = models.CharField(max_length=100)
     # Free text on purpose: heritage dates are often a year or "c. 1900".

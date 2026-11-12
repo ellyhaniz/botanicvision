@@ -173,7 +173,7 @@ class CollectibleCreateTests(CollectibleTestCase):
         with mock.patch("portal.forms.MAX_IMAGE_MB", 0.00001):
             self.assertIn("smaller", str(self.post(rec).context["form"].errors["image"]))
         self.assertEqual(Collectible.objects.count(), 0)
-        self.assertEqual(StoredFile.objects.count(), 0)          # nothing half-saved
+        self.assertFalse(StoredFile.objects.filter(name__startswith="collectibles/").exists())   # nothing half-saved
 
     def test_unverified_record_is_rejected(self):
         draft = self.botanical(status="DRAFT")
@@ -636,7 +636,7 @@ class SeedCollectiblesTests(CollectibleTestCase):
         call_command("seed_collectibles", "--clear", verbosity=0)
         self.assertEqual(list(Collectible.objects.values_list("name", flat=True)), ["Real card"])
         self.assertEqual(CollectibleUnlock.objects.count(), 0)
-        self.assertEqual(StoredFile.objects.count(), 1)
+        self.assertEqual(StoredFile.objects.filter(name__startswith="collectibles/").count(), 1)
         self.assertTrue(StoredFile.objects.filter(name=mine.image.name).exists())
 
     def test_clearing_records_first_is_refused_with_a_helpful_message(self):
